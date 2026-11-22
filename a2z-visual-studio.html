@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A2Z Visual Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday study tool, phone first
+   IDEA a graph-paper coding notebook with a highlighter, split into five tabbed sections
+   PICTURE Today: the day's ring and time bar; Learn: the live algorithm drawing on graph paper
+   COLOUR white paper, ink navy, highlighter yellow, red pen, green tick, one hue per topic
+   TYPE IBM Plex Sans + Plex Mono for code
+   LAYOUT phone: one column, tab bar at the bottom; laptop: tabs on top, two columns */
+:root{color-scheme:light dark;--bg:light-dark(#f4f5f8,#121419);--card:light-dark(#ffffff,#1b1e25);--paper:light-dark(#eceef3,#23272f);--grid:light-dark(#dfe3eb,#2c313b);--ink:light-dark(#1c2028,#e4e6eb);--mute:light-dark(#5a6272,#9da4b0);--line:light-dark(#dadee6,#2f343e);--acc:light-dark(#4353d6,#93a0ff);--accink:light-dark(#ffffff,#11131a);--hi:light-dark(#ffe27a,#d9b84a);--hiink:#1c2028;--red:light-dark(#cf443c,#f0827a);--grn:light-dark(#1a8f5c,#5ccb95);--ylw:light-dark(#c58a00,#e3bd5a);--blue:var(--acc)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent;padding-bottom:76px}
+header{background:var(--card);color:var(--ink);padding:14px 16px;border-bottom:1px solid var(--line)}
+header .in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:clamp(22px,5.5vw,30px);line-height:1.05;letter-spacing:-.02em;margin:0}
+.sub{font-size:14px;opacity:.85;margin-top:4px}
+.ring text{fill:currentColor;font-family:"IBM Plex Sans",sans-serif}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs button{font:inherit;font-size:13px;min-height:60px;border:0;background:none;color:var(--mute);display:grid;justify-items:center;align-content:center;gap:2px;cursor:pointer;position:relative}
+.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tabs button.on{color:var(--acc);font-weight:700}
+.tabs button.on::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;background:var(--acc);border-radius:0 0 3px 3px}
+.tabs .bdg{position:absolute;top:6px;left:calc(50% + 6px);background:var(--red);color:#fff;border-radius:9px;font-size:13px;font-weight:700;min-width:20px;height:20px;line-height:20px;padding:0 5px}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px 24px}
+h2{font-size:20px;line-height:1.2;margin:22px 0 10px;letter-spacing:-.01em}
+h2:first-child{margin-top:4px}
+h3{font-size:16px;margin:0 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stack{display:grid;gap:10px}
+.cols{display:grid;gap:16px}
+.btn{font:inherit;font-size:15px;min-height:44px;min-width:44px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.btn.pri{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:600}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.4}
+button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.small{font-size:13px;color:var(--mute)}
+.daynav{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;align-items:center;text-align:center}
+.daynav b{font-size:20px}
+.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center}
+.tbar{display:flex;height:16px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.tbar i{display:block}
+.leg{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5em,1fr));gap:2px 10px;margin-top:8px;font-size:14px}
+.leg i,.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;flex:none}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.qh{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start;margin-bottom:10px}
+.qh .dot{margin-top:7px}
+.nm{font-size:16px;font-weight:600;line-height:1.3}
+.meta{font-size:13px;color:var(--mute)}
+.tm{min-height:40px;font-size:14px;white-space:nowrap}
+.tm.on{background:var(--red);border-color:var(--red);color:#fff}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-size:14px;min-height:44px;border:0;border-left:1px solid var(--line);background:var(--paper);color:var(--mute);cursor:pointer;padding:0 4px}
+.seg button:first-child{border-left:0}
+.seg .g.on{background:var(--grn);color:#fff;font-weight:700}
+.seg .y.on{background:var(--ylw);color:#16213a;font-weight:700}
+.seg .r.on{background:var(--red);color:#fff;font-weight:700}
+.chk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;text-align:left;font:inherit;color:var(--ink);width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;min-height:64px}
+.chk .box{width:28px;height:28px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;color:transparent;font-weight:700}
+.chk.on .box{background:var(--grn);border-color:var(--grn);color:#fff}
+.chk.on{background:color-mix(in srgb,var(--grn) 10%,var(--card))}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wk .hd{font-size:13px;color:var(--mute);text-align:center}
+.cell{font:inherit;color:var(--ink);aspect-ratio:1/1.05;border:1px solid var(--line);border-radius:10px;cursor:pointer;display:grid;align-content:space-between;justify-items:center;padding:5px 2px;background:linear-gradient(to top,color-mix(in srgb,var(--grn) 38%,var(--card)) var(--p),var(--card) var(--p))}
+.cell b{font-size:16px;line-height:1}
+.cell.rev{border-style:dashed}
+.cell.now b{background:var(--hi);color:var(--hiink);border-radius:9px;padding:2px 6px}
+.cell.sel{outline:3px solid var(--acc);outline-offset:1px}
+.dots{display:flex;gap:2px;font-size:13px;color:var(--mute);min-height:8px}
+.dots i{width:8px;height:8px;border-radius:50%}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.chips.wrapc{flex-wrap:wrap;overflow:visible}
+.chip{flex:none;font:inherit;font-size:14px;min-height:44px;padding:0 12px;border-radius:22px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;display:flex;align-items:center;white-space:nowrap}
+.chip.on{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:600}
+.chip span{margin-left:6px;opacity:.7;font-size:13px}
+.li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.li:first-child{border-top:0}
+.sd{width:12px;height:12px;border-radius:50%;border:2px solid var(--line)}
+.sd.g{background:var(--grn);border-color:var(--grn)}.sd.y{background:var(--ylw);border-color:var(--ylw)}.sd.r{background:var(--red);border-color:var(--red)}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(7em,1fr));gap:8px}
+.nums div{background:var(--paper);border-radius:10px;padding:8px 10px}
+.nums b{display:block;font-size:22px;line-height:1.15;white-space:nowrap}
+.nums span{font-size:13px;color:var(--mute)}
+.trow{display:grid;grid-template-columns:minmax(0,9em) minmax(0,1fr) 3.6em;gap:8px;align-items:center;font:inherit;font-size:14px;color:var(--ink);background:none;border:0;width:100%;text-align:left;min-height:40px;cursor:pointer;padding:0}
+.trow .bar{height:12px;background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.trow .bar i{display:block;height:100%}
+.trow em{font-style:normal;text-align:right;white-space:nowrap;color:var(--mute)}
+.dbars{display:flex;gap:3px;align-items:flex-end;height:120px}
+.dbars button{flex:1;border:1px solid var(--line);border-radius:4px 4px 0 0;padding:0;cursor:pointer;background:linear-gradient(to top,var(--grn) var(--p),var(--card) var(--p));min-width:0}
+.dbars button.now{border-color:var(--ink);border-width:2px}
+.vizbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=text],input[type=password]{font:inherit;font-size:16px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:0 10px;flex:1 1 200px}
+input[type=range]{width:100%;height:44px;accent-color:var(--acc);margin:0}
+.fig{position:relative;height:clamp(260px,56vw,380px);background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;border:1px solid var(--line);border-radius:14px;margin:10px 0 0;overflow:hidden;touch-action:pan-y}
+.fig svg{position:absolute;inset:0;width:100%;height:100%}
+.fig svg text{font-family:"IBM Plex Sans",sans-serif;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:3px}
+.ctl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ctl .btn{padding:0 4px}
+.msg{min-height:4.6em;font-size:16px;margin:8px 0;padding:10px 12px;border-left:4px solid var(--hi);background:var(--paper);border-radius:0 10px 10px 0}
+pre{font:14px/1.6 "IBM Plex Mono",monospace;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 0;margin:0;overflow-x:auto}
+pre span{display:block;padding:0 12px;white-space:pre}
+pre span.on{background:var(--hi);color:var(--hiink)}
+.qz p{margin:0 0 6px;font-weight:600}
+.qz button{display:block;width:100%;text-align:left;font:inherit;font-size:15px;min-height:44px;margin:4px 0;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.qz button.ok{background:color-mix(in srgb,var(--grn) 22%,var(--card));border-color:var(--grn)}
+.qz button.no{background:color-mix(in srgb,var(--red) 18%,var(--card));border-color:var(--red)}
+.qz .why{font-size:14px;color:var(--mute);margin-top:4px}
+.empty{color:var(--mute);font-size:15px}
+#tbar{position:fixed;left:8px;right:8px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:19;background:var(--acc);color:var(--accink);border-radius:14px;padding:8px 8px 8px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+#tbar b{font:600 20px "IBM Plex Mono",monospace}
+#tbar .tn{font-size:13px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tbar.over{background:var(--red);color:#fff}
+
+.sync{font-size:13px;margin-top:2px;opacity:.85;display:flex;align-items:center;gap:6px}
+.sync::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--mute)}
+.sync[data-s=ok]::before{background:var(--grn)}.sync[data-s=saving]::before,.sync[data-s=load]::before{background:var(--hi)}.sync[data-s=err]::before{background:#ff6b6b}
+.card,.q,.chk{border-radius:18px;box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 6%,transparent)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:12px}
+.wd{font:inherit;font-size:13px;color:var(--mute);background:none;border:0;border-radius:12px;padding:6px 0;display:grid;justify-items:center;gap:2px;cursor:pointer;min-height:44px}
+.wd.on{background:var(--paper);color:var(--ink);font-weight:700;outline:2px solid var(--acc)}
+.streak{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:14px}
+.focus{border-radius:22px;padding:18px;background:color-mix(in srgb,var(--tc) 13%,var(--card));border:2px solid var(--tc)}
+.fk{font-size:14px;font-weight:600;color:var(--mute)}
+.fn{font-size:clamp(22px,5.6vw,28px);font-weight:700;line-height:1.15;letter-spacing:-.01em;margin:4px 0;text-wrap:balance}
+.fm{font-size:14px;color:var(--mute)}
+.fclk{display:flex;align-items:baseline;gap:8px;margin-top:12px}
+.fclk b{font:600 clamp(40px,12vw,56px)/1 "IBM Plex Mono",monospace}
+.fbar{height:10px;border-radius:5px;background:var(--card);border:1px solid var(--line);overflow:hidden;margin-top:8px}
+.fbar i{display:block;height:100%;width:0;background:var(--grn)}
+.fbar.over i{background:var(--red)}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(9em,1fr));gap:8px;margin:14px 0 12px}
+.fl{font-size:14px;font-weight:600;margin-bottom:6px}
+.focus .seg button{background:var(--card)}
+.qr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;font-size:15px;color:var(--ink);background:none;border:0;border-top:1px solid var(--line);min-height:48px;padding:6px 4px;cursor:pointer}
+.qr:first-of-type{border-top:0}
+.qr.on{background:var(--paper);font-weight:600;border-radius:10px}
+.sw{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.sw button{font:inherit;font-size:15px;min-height:44px;border:0;background:var(--card);color:var(--mute);cursor:pointer}
+.sw button.on{background:var(--acc);color:var(--accink);font-weight:700}
+#jsvg{display:block;width:100%}
+#jsvg text{font-family:"IBM Plex Sans",sans-serif;fill:var(--ink)}
+#jsvg g{cursor:pointer}
+.msg.ask{border-left-color:var(--blue);cursor:pointer;font-weight:600}
+
+.hbtns{display:flex;align-items:center;gap:10px}
+#opts{margin-bottom:14px}
+#opts h3{margin-top:14px}#opts h3:first-child{margin-top:0}
+.brow{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr));gap:8px;margin-top:8px}
+.banner{border-radius:18px;padding:14px;background:color-mix(in srgb,var(--ylw) 16%,var(--card));border:1px solid var(--ylw)}
+.cell.off{border-style:dotted;cursor:default;color:var(--mute);font-size:13px;align-content:center;background:var(--paper)}
+.cell.blank{border:0;background:none;cursor:default}
+textarea{font:inherit;font-size:16px;width:100%;min-height:64px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 10px;margin-top:12px;resize:vertical}
+.note{font-size:14px;margin-top:8px}.note summary{cursor:pointer;min-height:36px;color:var(--mute)}
+@media(min-width:900px){body{padding-bottom:0}.tabs{position:sticky;top:0;bottom:auto;border-top:0;border-bottom:1px solid var(--line)}.tabs{max-width:none;justify-content:center;grid-template-columns:repeat(5,minmax(0,200px))}.tabs button{display:flex;justify-content:center;align-items:center;gap:8px;font-size:15px;min-height:52px}.tabs .bdg{position:static}.tabs button.on::before{top:auto;bottom:0;border-radius:3px 3px 0 0}.cols{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}#tbar{left:auto;right:16px;bottom:16px;width:360px}.cell{aspect-ratio:auto;min-height:64px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="in"><div><h1>A2Z Visual Studio</h1><div class="sub" id="sub"></div><div class="sync" id="sync" data-s="local">Saved on this device only</div></div><div class="hbtns"><button class="btn" data-act="opts" id="bopt">Options</button><div id="hring"></div></div></div></header>
+<nav class="tabs" id="tabs" aria-label="Sections">
+<button data-nav="today"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Today</button>
+<button data-nav="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Journey</button>
+<button data-nav="learn"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>Learn</button>
+<button data-nav="review"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5l2-2v6h-6l2-2a5 5 0 0 0-9 3M20 12a8 8 0 0 1-14 5"/></svg>Review<span class="bdg" id="bdg" hidden></span></button>
+<button data-nav="stats"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Progress</button>
+</nav>
+<main class="wrap">
+<section class="card" id="opts" hidden></section>
+<section class="view" id="v-today"></section>
+<section class="view" id="v-plan" hidden></section>
+<section class="view" id="v-learn" hidden>
+<h2>Pick a topic</h2>
+<div class="chips" id="chips"></div>
+<div class="cols" style="margin-top:10px">
+<div class="card">
+<h3 id="vtitle"></h3>
+<div class="vizbar"><input type="text" id="inp" aria-label="Your own input" autocomplete="off" spellcheck="false"><button class="btn" id="run">Run</button></div>
+<div class="chips" id="modes" style="margin-top:8px" hidden></div>
+<div class="small" id="hint" style="margin-top:4px"></div>
+<div class="fig" id="fig"><svg id="svg"></svg></div>
+<input type="range" id="scr" min="0" max="0" value="0" aria-label="Step">
+<div class="small" id="stepn"></div>
+<div class="msg" id="msg"></div>
+<div class="ctl">
+<button class="btn" id="b0" aria-label="Restart">⟲</button>
+<button class="btn" id="bp" aria-label="Previous step">◀</button>
+<button class="btn pri" id="bplay">▶ Play</button>
+<button class="btn" id="bn" aria-label="Next step">▶</button>
+<button class="btn" id="bspd" aria-label="Speed">1×</button>
+</div>
+<button class="btn wide" id="bpred" style="margin-top:8px" aria-pressed="false">Predict mode: off</button>
+<div class="small" style="margin-top:6px">Swipe the drawing to step, drag the slider to jump. Predict mode hides each explanation until you have guessed it.</div>
+</div>
+<div class="stack">
+<div class="card"><h3>Code, line by line</h3><pre id="code"></pre></div>
+<div class="card"><h3 id="qzh">Quick check</h3><div class="stack" id="quiz"></div></div>
+</div>
+</div>
+<h2 id="tqs"></h2>
+<div class="stack" id="tlist"></div>
+</section>
+<section class="view" id="v-review" hidden></section>
+<section class="view" id="v-stats" hidden></section>
+</main>
+<div id="tbar" hidden></div>
+<script>
+const Q=[[1,0,"Basic Hashing",35,1,"B"],[2,0,"Longest Consecutive Sequence in an Array",50,1,"C"],[3,0,"Longest subarray with sum K",60,1,"C"],[4,0,"Largest Subarray with Sum 0",45,1,"C"],[5,0,"Count subarrays with given sum",50,1,"C"],[6,1,"Search X in sorted array",20,1,"B"],[7,1,"Lower Bound",35,1,"C"],[8,1,"Upper Bound",25,1,"C"],[9,1,"Search insert position",20,2,"B"],[10,1,"Floor and Ceil in Sorted Array",35,2,"C"],[11,1,"First and last occurrence",40,2,"C"],[12,1,"Search in rotated sorted array-I",60,2,"C"],[13,1,"Search in rotated sorted array-II",50,2,"C"],[14,1,"Find minimum in Rotated Sorted Array",45,2,"C"],[15,1,"Find out how many times the array is rotated",25,2,"C"],[16,1,"Single element in sorted array",55,2,"C"],[17,1,"Count Occurrences in a Sorted Array",20,2,"C"],[18,1,"Find square root of a number",35,2,"C"],[19,1,"Find Nth root of a number",45,3,"C"],[20,1,"Find the smallest divisor",45,3,"C"],[21,1,"Find peak element",60,3,"C"],[22,1,"Find row with maximum 1's",40,3,"C"],[23,1,"Search in a 2D Matrix",40,3,"C"],[24,1,"Search in 2D matrix - II",45,3,"C"],[25,1,"Find Peak Element - II",70,3,"C"],[26,2,"Remove Outermost Parentheses",30,4,"C"],[27,2,"Maximum Nesting Depth of the Parentheses",25,4,"C"],[28,2,"Roman to Integer",30,4,"B"],[29,2,"String to Integer (atoi)",60,4,"C"],[30,2,"Longest Palindromic Substring",75,4,"C"],[31,2,"Sum of Beauty of All Substrings",50,4,"C"],[32,3,"Pow(x,n)",50,4,"C"],[33,3,"Generate Parentheses",60,5,"C"],[34,3,"Power Set",55,5,"C"],[35,3,"Count Good Numbers",45,5,"C"],[36,3,"Reverse a Stack",60,5,"C"],[37,3,"Check if there exists a subsequence with sum K",50,5,"C"],[38,3,"Count all subsequences with sum K",45,5,"C"],[39,3,"Generate Binary Strings Without Consecutive 1s",50,5,"C"],[40,3,"Combination Sum",70,6,"C"],[41,3,"Combination Sum II",75,6,"C"],[42,3,"Subsets I",40,6,"C"],[43,3,"Subsets II",60,6,"C"],[44,4,"Introduction to Singly LinkedList",30,6,"B"],[45,4,"Traversal in Linked List",15,6,"B"],[46,4,"Deletion in Linked List",30,6,"C"],[47,4,"Insertion in Linked List",30,6,"C"],[48,4,"Deletion of the head of LL",10,8,"C"],[49,4,"Deletion of the tail of Linked List",10,8,"C"],[50,4,"Deletion of the Kth element of Linked List",15,8,"C"],[51,4,"Delete the element with value X",15,8,"C"],[52,4,"Insertion at the head of Linked List",10,8,"C"],[53,4,"Insertion at the tail of Linked List",10,8,"C"],[54,4,"Insertion at the Kth position of Linked List",20,8,"C"],[55,4,"Insertion before the value X in Linked List",15,8,"C"],[56,4,"Find the length of the Linked List",10,8,"B"],[57,4,"Search in Linked List",10,8,"C"],[58,4,"Introduction to Doubly LL",25,8,"B"],[59,4,"Deletion in Doubly LL",25,8,"C"],[60,4,"Insertion in DLL",25,8,"C"],[61,4,"Convert Array to Doubly Linked List",15,8,"C"],[62,4,"Delete Tail of Doubly Linked List",10,8,"C"],[63,4,"Delete Kth Element of Doubly Linked List",15,8,"C"],[64,4,"Removing given node in Doubly Linked List",15,8,"C"],[65,4,"Insert node before head in Doubly Linked List",10,8,"C"],[66,4,"Insert node before tail in Doubly Linked List",15,8,"C"],[67,4,"Insert node before (kth node) in Doubly Linked List",15,8,"C"],[68,4,"Insert before given node in Doubly Linked List",15,8,"C"],[69,4,"Delete head of Doubly Linked List",10,8,"C"],[70,4,"Reverse a Doubly Linked List",35,8,"C"],[71,4,"Add two numbers in Linked List",50,9,"C"],[72,4,"Segregate odd and even nodes in Linked List",45,9,"C"],[73,4,"Sort a Linked List of 0's 1's and 2's",45,9,"C"],[74,4,"Remove Nth node from the back of the LL",50,9,"C"],[75,4,"Reverse a LL",55,9,"C"],[76,4,"Add one to a number represented by LL",50,9,"C"],[77,4,"Find Middle of Linked List",30,9,"B"],[78,4,"Delete the middle node in LL",35,9,"C"],[79,4,"Check if LL is palindrome or not",60,9,"C"],[80,4,"Find the intersection point of Y LL",50,10,"C"],[81,4,"Detect a loop in LL",40,10,"C"],[82,4,"Find the starting point in LL",55,10,"C"],[83,4,"Length of loop in LL",30,10,"C"],[84,4,"Rotate a LL",45,10,"C"],[85,4,"Merge two Sorted Lists",40,10,"B"],[86,4,"Sort LL",65,10,"C"],[87,4,"Delete all occurrences of a key in DLL",35,10,"C"],[88,4,"Remove duplicates from sorted DLL",30,11,"C"],[89,4,"Find Pairs with Given Sum in Doubly Linked List",40,11,"C"],[90,5,"Assign Cookies",30,11,"C"],[91,5,"Lemonade Change",30,11,"C"],[92,5,"Fractional Knapsack",45,11,"C"],[93,5,"Jump Game - I",40,11,"C"],[94,5,"Shortest Job First",40,11,"C"],[95,5,"Job sequencing Problem",60,11,"C"],[96,5,"N meetings in one room",45,11,"C"],[97,5,"Non-overlapping Intervals",55,12,"C"],[98,5,"Insert Interval",55,12,"C"],[99,5,"Merge Intervals",45,12,"C"],[100,5,"Minimum number of platforms required for a railway",55,12,"C"],[101,6,"Theory",45,12,"C"],[102,6,"Maximum Points You Can Obtain from Cards",45,12,"C"],[103,6,"Longest Substring Without Repeating Characters",60,12,"C"],[104,6,"Max Consecutive Ones III",55,13,"C"],[105,6,"Fruit Into Baskets",55,13,"C"],[106,6,"Number of Substrings Containing All Three Characters",65,13,"C"],[107,6,"Binary Subarrays With Sum",65,13,"C"],[108,7,"Implementation using different DS",30,13,"C"],[109,7,"Implement Stack using Arrays",25,13,"C"],[110,7,"Implement Queue using Arrays",30,13,"C"],[111,7,"Implement Stack using Queue",30,15,"C"],[112,7,"Implement Queue using Stack",35,15,"C"],[113,7,"Implement stack using Linkedlist",25,15,"C"],[114,7,"Implement queue using Linkedlist",25,15,"C"],[115,7,"Balanced Paranthesis",30,15,"C"],[116,7,"Infix to Postfix Conversion",50,15,"C"],[117,7,"Infix to Prefix Conversion",30,15,"C"],[118,7,"Prefix to Infix Conversion",25,15,"C"],[119,7,"Prefix to Postfix Conversion",20,15,"C"],[120,7,"Postfix to Infix Conversion",20,15,"C"],[121,7,"Postfix to Prefix Conversion",20,15,"C"],[122,7,"Next Greater Element",50,15,"C"],[123,7,"Next Greater Element - 2",45,15,"C"],[124,7,"Asteroid Collision",55,16,"C"],[125,7,"Sum of Subarray Minimums",90,16,"C"],[126,7,"Sum of Subarray Ranges",60,16,"C"],[127,7,"Remove K Digits",65,16,"C"],[128,7,"Next Smaller Element",30,16,"C"],[129,7,"Implement Min Stack",55,16,"C"],[130,7,"Stock span problem",55,17,"C"],[131,7,"Celebrity Problem",50,17,"C"],[132,7,"Number of Greater Elements to the Right",45,17,"C"],[133,8,"Introduction",30,17,"B"],[134,8,"Inorder Traversal",20,17,"B"],[135,8,"Preorder Traversal",15,17,"B"],[136,8,"Postorder Traversal",15,17,"B"],[137,8,"Level Order Traversal",40,17,"C"],[138,8,"Pre, Post, Inorder in one traversal",45,17,"C"],[139,8,"Maximum Depth in BT",30,17,"C"],[140,8,"Check if two trees are identical or not",30,18,"C"],[141,8,"Check for balanced binary tree",45,18,"C"],[142,8,"Diameter of Binary Tree",50,18,"C"],[143,8,"Check for symmetrical BTs",40,18,"C"],[144,8,"Children Sum Property in Binary Tree",45,18,"C"],[145,8,"Zig Zag or Spiral Traversal",45,18,"C"],[146,8,"Boundary Traversal",65,18,"C"],[147,8,"Top View of BT",60,18,"C"],[148,8,"Bottom view of BT",35,19,"C"],[149,8,"Right/Left View of BT",45,19,"C"],[150,8,"Print root to leaf path in BT",40,19,"C"],[151,8,"Count total nodes in a complete BT",60,19,"C"],[152,8,"Requirements needed to construct a unique BT",20,19,"C"],[153,8,"Construct a BT from Preorder and Inorder",75,19,"C"],[154,8,"Construct a BT from Postorder and Inorder",45,19,"C"],[155,9,"Introduction to BST",25,19,"B"],[156,9,"Search in BST",20,20,"B"],[157,9,"Floor and Ceil in a BST",45,20,"C"],[158,9,"Insert a given node in BST",35,20,"C"],[159,9,"Delete a node in BST",60,20,"C"],[160,9,"Kth Smallest and Largest element in BST",40,20,"C"],[161,9,"Check if a tree is a BST or not",45,20,"C"],[162,9,"LCA in BST",35,20,"C"],[163,9,"Construct a BST from a preorder traversal",55,20,"C"],[164,9,"Inorder successor and predecessor in BST",50,20,"C"],[165,9,"BST iterator",55,22,"C"],[166,9,"Two sum in BST",55,22,"C"],[167,10,"Heaps (Theory Video)",45,22,"C"],[168,10,"Heapify Algorithm",45,22,"C"],[169,10,"Build heap from a given Array",35,22,"C"],[170,10,"Implement Min Heap",45,22,"C"],[171,10,"Implement Max Heap",20,22,"C"],[172,10,"Check if an array represents a min heap",20,22,"C"],[173,10,"Convert Min Heap to Max Heap",30,22,"C"],[174,10,"Replace Elements by Their Rank",40,23,"C"],[175,10,"Task Scheduler",65,23,"C"],[176,10,"Hand of Straights",55,23,"C"],[177,10,"Design Twitter",80,23,"C"],[178,10,"Minimum Cost to Connect Sticks",40,23,"C"],[179,10,"Maximum Sum Combination",60,23,"C"],[180,10,"Top K Frequent Elements",50,23,"C"],[181,11,"Introduction to DP",40,24,"B"],[182,11,"Climbing stairs",40,24,"C"],[183,11,"Frog Jump",60,24,"C"],[184,11,"Frog jump with K distances",40,24,"C"],[185,11,"Maximum sum of non adjacent elements",60,24,"C"],[186,11,"House robber",45,24,"C"],[187,11,"Ninja's training",75,25,"C"],[188,11,"Grid unique paths",60,25,"C"],[189,11,"Minimum Falling Path Sum",55,25,"C"],[190,11,"Triangle",55,25,"C"],[191,11,"Best time to buy and sell stock",40,25,"C"],[192,11,"Best time to buy and sell stock II",65,25,"C"],[193,11,"Best time to buy and sell stock with transaction fees",30,25,"C"],[194,11,"Best Time to Buy and Sell Stock with Cooldown",35,25,"C"],[195,11,"Subset sum equals to target",75,26,"C"],[196,11,"Partition equal subset sum",35,26,"C"],[197,11,"Count subsets with sum K",60,26,"C"],[198,11,"Count partitions with given difference",50,26,"C"],[199,11,"0 and 1 Knapsack",70,26,"C"],[200,11,"Minimum coins",65,26,"C"],[201,11,"Target sum",40,27,"C"],[202,11,"Unbounded knapsack",45,27,"C"],[203,11,"Longest Increasing Subsequence",90,27,"C"],[204,11,"Largest Divisible Subset",60,27,"C"],[205,11,"Longest String Chain",60,27,"C"],[206,11,"Longest Bitonic Subsequence",50,27,"C"],[207,11,"Number of Longest Increasing Subsequences",70,27,"C"],[208,11,"Longest common subsequence",80,28,"C"],[209,11,"Longest common substring",50,28,"C"],[210,11,"Longest palindromic subsequence",40,28,"C"],[211,11,"Minimum insertions or deletions to convert string A to B",35,28,"C"],[212,11,"Word Break",75,28,"C"],[213,12,"Trie Implementation and Operations",60,28,"C"],[214,12,"Trie Implementation and Advanced Operations",50,29,"C"],[215,12,"Longest Word with All Prefixes",50,29,"C"],[216,13,"Reverse every word in a string",40,29,"C"],[217,13,"Minimum number of bracket reversals to make an expression balanced",45,29,"C"],[218,13,"Count and say",45,29,"C"],[219,14,"Sieve of Eratosthenes (problem 1 of 3)",40,29,"C"],[220,14,"Sieve of Eratosthenes (problem 2 of 3)",35,29,"C"],[221,14,"Sieve of Eratosthenes (problem 3 of 3)",35,29,"C"]];
+const P=[[1,"2026-11-23","Learn","Hashing → Binary Search","DBMS: foundations, architecture, keys, schemas","Resume: final 1-page version — get it reviewed",""],[2,"2026-11-24","Learn","Binary Search","DBMS: ER modelling + database design","Unfiltered site deep-dive: schema, auth, caching, deploy talking points",""],[3,"2026-11-25","Learn","Binary Search → Strings","DBMS: relational model + normalization (1NF–BCNF)","Apply to 5 roles + 3 personalised IITG alumni notes",""],[4,"2026-11-26","Learn","Strings → Recursion","SQL: SELECT/WHERE/ORDER BY/NULLs — write every query","OOP in C++: 4 pillars, constructors, virtual functions, vtable",""],[5,"2026-11-27","Learn","Recursion","SQL: GROUP BY, HAVING, set operations","Walmart DaaP project: reconstruct it, write one STAR story",""],[6,"2026-11-28","Learn","Recursion → Linked-List","SQL: joins (inner/left/self, multi-table)","Behavioural: gap story + 'why SDE' — record yourself",""],[7,"2026-11-29","Revision","Revision day","SQL: subqueries (correlated, EXISTS, IN)","Weekly review: update tracker, plan applications","Re-solve every 🔴 from Days 1–6 (≈3h)\nRe-solve 🟡 you can't do in 20 min (≈1.5h)\nTimed mock: 3 random questions from Days 1–6 in 2h"],[8,"2026-11-30","Learn","Linked-List","DBMS: indexing — B-tree/B+ tree, clustered vs non-clustered","OOP in C++: abstract classes, operator overloading, STL internals",""],[9,"2026-12-01","Learn","Linked-List","DBMS: transactions — ACID, isolation levels","Apply to 5 roles + follow-ups",""],[10,"2026-12-02","Learn","Linked-List","DBMS: concurrency — locking, deadlock, MVCC","LLD basics: SOLID with C++ examples",""],[11,"2026-12-03","Learn","Linked-List → Greedy","DBMS: recovery (WAL) + NoSQL, sharding, replication (skim)","C++ projects deep-dive: design choices and trade-offs",""],[12,"2026-12-04","Learn","Greedy → Sliding Window / 2 Pointer","SQL: 15 mixed questions from memory","Behavioural: 5 STAR stories",""],[13,"2026-12-05","Learn","Sliding Window / 2 Pointer → Stack / Queues","OS: basics, processes, PCB, process states","Apply to 5 roles + referral asks",""],[14,"2026-12-06","Revision","Revision day","DBMS + SQL revision: 1-page notes","Weekly review + ask a mentor for a mock/resume check","Re-solve every 🔴 from Days 8–13 (≈3h)\nRe-solve 🟡 you can't do in 20 min (≈1.5h)\nTimed mock: 3 random questions from Days 8–13 in 2h"],[15,"2026-12-07","Learn","Stack / Queues","OS: CPU scheduling (solve numericals)","LLD: LRU cache / parking lot class design",""],[16,"2026-12-08","Learn","Stack / Queues","OS: threads & multithreading, kernel vs user mode","Apply to 5 roles; tailor resume keywords per JD",""],[17,"2026-12-09","Learn","Stack / Queues → Binary Trees","OS: synchronization — mutex, semaphores, producer-consumer","Unfiltered site: README + feature tests (resume-grade)",""],[18,"2026-12-10","Learn","Binary Trees","OS: deadlock — conditions, Banker's algorithm","LLD: rate limiter / URL shortener classes",""],[19,"2026-12-11","Learn","Binary Trees → Binary Search Trees","OS: system calls & IPC","Apply to 5 roles + referral asks",""],[20,"2026-12-12","Learn","Binary Search Trees","OS: memory management, paging","Peer mock interview (DSA, 45 min)",""],[21,"2026-12-13","Revision","Revision day","OS revision: 1-page notes, explain aloud","Weekly review + interview pipeline tracker","Re-solve every 🔴 from Days 15–20 (≈3h)\nRe-solve 🟡 you can't do in 20 min (≈1.5h)\nTimed mock: 3 random questions from Days 15–20 in 2h"],[22,"2026-12-14","Learn","Binary Search Trees → Heaps","OS: virtual memory, page replacement, thrashing","HLD basics: load balancer, caching, DB scaling",""],[23,"2026-12-15","Learn","Heaps","OS: file systems + disk scheduling (skim)","Apply to 5 roles + follow-ups",""],[24,"2026-12-16","Learn","Dynamic Programming","CN: OSI vs TCP/IP, HTTP/HTTPS, TLS, DNS","'Tell me about yourself' in 2 min — record and fix",""],[25,"2026-12-17","Learn","Dynamic Programming","CN: TCP vs UDP, 3-way handshake, flow/congestion control","LLD: food-ordering/menu system (ties to Unfiltered)",""],[26,"2026-12-18","Learn","Dynamic Programming","CN: IP, subnetting, NAT, routing basics","Apply to 5 roles + referral asks",""],[27,"2026-12-19","Learn","Dynamic Programming","CN: 'what happens when you type a URL' end-to-end","Peer mock interview #2 (DSA + project)",""],[28,"2026-12-20","Learn","Dynamic Programming → Tries","Core CS: top 30 DBMS/OS questions, answered aloud","Apply to 5 roles; questions to ask interviewers",""],[29,"2026-12-21","Learn","Tries → Strings (Adv) → Maths","Core CS: top 20 CN + SQL questions","Update resume with anything new",""],[30,"2026-12-22","Final revision","Revision day","Mock core-CS round: 45 min mixed, note gaps","Month review: next month = hard questions + interviews","Re-solve every 🔴 from the whole month (≈3h)\nRe-solve 🟡 you can't do in 20 min (≈1.5h)\nTimed mock: 3 random questions from the whole month in 2h"]];
+{
+const TOP=["Hashing","Binary Search","Strings (Basic and Medium)","Recursion","Linked-List","Greedy Algorithms","Sliding Window / 2 Pointer","Stack / Queues","Binary Trees","Binary Search Trees","Heaps","Dynamic Programming","Tries","Strings (Advanced Algo)","Maths"];
+const SHORT=["Hashing","Binary Search","Strings","Recursion","Linked List","Greedy","Sliding Window","Stack / Queue","Binary Trees","BST","Heaps","DP","Tries","Strings (Adv)","Maths"];
+const TH=[20,40,15,75,30,20,15,30,40,15,15,60,15,10,20];
+const TC=i=>`hsl(${(i*47+210)%360} 62% 50%)`;
+const START=new Date(2026,10,23),DAY=864e5,GAP=[1,3,7];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=o=>{o=o&&typeof o==='object'?o:{};for(const k of ['q','c','j','dd','t','act','off','mv','n'])if(!o[k]||typeof o[k]!=='object')o[k]={};for(const k of Object.keys(o))if(/^\d+$/.test(k)){if(o[k]&&o[k].s)o.q[k]=o[k];delete o[k]}return o};
+let S={};
+try{S=JSON.parse(localStorage.getItem('a2z-v1')||'{}')}catch(e){S={}}
+S=norm(S);
+const hasData=()=>Object.keys(S.q).length||Object.keys(S.c).length||Object.keys(S.j).length||Object.keys(S.t).length;
+const store=()=>{try{localStorage.setItem('a2z-v1',JSON.stringify(S))}catch(e){}};
+let ref=null,dirty=false,writing=false,wt=null,syncState='local';
+const SY={local:'Saved on this device only',load:'Connecting sync…',ok:'Synced across your devices',saving:'Saving…',err:'Sync paused, saved on this device'};
+const setSync=s=>{syncState=s;const el=$('sync');if(el){el.textContent=SY[s];el.dataset.s=s}};
+async function push(){if(!ref||writing)return;writing=true;while(dirty){dirty=false;try{await ref.set(JSON.parse(JSON.stringify(S)))}catch(e){writing=false;setSync('err');return}}writing=false;setSync('ok')}
+const save=()=>{S._u=Date.now();store();if(ref){dirty=true;setSync('saving');clearTimeout(wt);wt=setTimeout(push,700)}};
+const GF='a2z-progress.json',GAPI='https://api.github.com/gists',inClaude=()=>!!(window.claude&&window.claude.use);
+let gtok='',gid='',gtimer=null,gmsg='';
+try{gtok=localStorage.getItem('a2z-gtok')||'';gid=localStorage.getItem('a2z-gid')||''}catch(e){}
+const gh=(url,opt)=>{opt=opt||{};const hd={Authorization:'Bearer '+gtok,Accept:'application/vnd.github+json'};if(opt.body)hd['Content-Type']='application/json';return fetch(url,{method:opt.method||'GET',body:opt.body,headers:hd,cache:'no-store'}).then(r=>{if(!r.ok){const e=new Error('GitHub answered '+r.status);e.status=r.status;throw e}return r.json()})};
+async function gPull(){const g=await gh(GAPI+'/'+gid),f=g.files&&g.files[GF];if(!f)return null;let c=f.content;if(f.truncated&&f.raw_url)c=await fetch(f.raw_url,{cache:'no-store'}).then(r=>r.text());try{return JSON.parse(c)}catch(e){return null}}
+async function gCheck(){if(!ref||!gtok||dirty||writing)return;try{const r=await gPull();if(dirty||writing)return;const ru=(r&&r._u)||0,lu=S._u||0;if(r&&ru>lu){S=norm(r);store();recalc();renderAll()}else if(ru<lu&&hasData()){dirty=true;await push();return}gmsg='';setSync('ok')}catch(e){gmsg=e.message;setSync('err')}}
+async function gInit(){if(!gtok)return;setSync('load');try{
+  if(gid){try{await gh(GAPI+'/'+gid)}catch(e){if(e.status===404)gid='';else throw e}}
+  if(!gid){const list=await gh(GAPI+'?per_page=100'),hit=list.find(g=>g.files&&g.files[GF]);if(hit)gid=hit.id;else{if(!S._u)S._u=Date.now();const g=await gh(GAPI,{method:'POST',body:JSON.stringify({description:'A2Z Visual Studio progress (do not edit by hand)',public:false,files:{[GF]:{content:JSON.stringify(S)}}})});gid=g.id}try{localStorage.setItem('a2z-gid',gid)}catch(e){}}
+  ref={set:d=>gh(GAPI+'/'+gid,{method:'PATCH',body:JSON.stringify({files:{[GF]:{content:JSON.stringify(d)}}})})};
+  await gCheck();clearInterval(gtimer);gtimer=setInterval(gCheck,45000);gmsg=''}catch(e){ref=null;gmsg=e.status===401?'GitHub rejected the token. Check it was copied fully and has the gist permission.':e.message;setSync('err')}
+  if(typeof renderOpts==='function')renderOpts()}
+function gDisconnect(){clearInterval(gtimer);gtimer=null;ref=null;gtok='';gid='';gmsg='';try{localStorage.removeItem('a2z-gtok');localStorage.removeItem('a2z-gid')}catch(e){}setSync('local')}
+async function initSync(){try{if(!inClaude()){gInit();return}setSync('load');const [d,u]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);const uid=u?await u.id():null;if(!d||!uid){setSync('local');return}
+  ref=d.doc('data/users/'+uid+'/state');const to=setTimeout(()=>{if(syncState==='load')setSync('err')},10000);
+  ref.onSnapshot(snap=>{const m=snap.metadata||{};if(m.hasPendingWrites)return;if(!m.fromCache)clearTimeout(to);if(dirty||writing)return;
+    if(!snap.exists){if(!m.fromCache){if(hasData()){if(!S._u)S._u=Date.now();dirty=true;push()}else setSync('ok')}return}
+    const r=snap.data()||{},ru=r._u||0,lu=S._u||0;
+    if(ru>lu){S=norm(JSON.parse(JSON.stringify(r)));store();recalc();renderAll()}else if(ru<lu&&!m.fromCache){dirty=true;push();return}
+    if(!m.fromCache)setSync('ok')},()=>{clearTimeout(to);setSync('err')})}catch(e){setSync('local')}}
+const today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+
+const fmt=d=>d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+Q.forEach(q=>{q[6]=q[4]});
+let CAL=[],tStart=[],N=30,PL=[],optLen=0,bkOpen=false,bkMsg='';
+const typeOf=(k,n)=>k===n?'Final revision':k%7===0?'Revision':'Learn';
+const learnDays=(from,n)=>{const a=[];for(let k=from;k<=n;k++)if(typeOf(k,n)==='Learn')a.push(k);return a};
+function buildPlan(){N=Math.min(60,Math.max(10,Math.round(+S.len||30)));PL=[];for(let k=1;k<=N;k++){const src=P[Math.min(29,Math.floor((k-1)*30/N))],ty=typeOf(k,N),span=ty==='Final revision'?'the whole plan':`Days ${Math.max(1,k-6)} to ${k-1}`;
+  PL.push([k,'',ty,'',k===N?P[29][4]:src[4],k===N?P[29][5]:src[5],ty==='Learn'?'':`Re-solve every question you marked “Saw solution” from ${span} (about 3 h)\nRe-solve the “Hint used” ones you still can't do in 20 min (about 1.5 h)\nTimed mock: 3 random questions from ${span} in 2 h`])}}
+function recalc(){buildPlan();Q.forEach(q=>{const m=S.mv[q[0]];q[4]=Math.min(N,m>=1?m:q[6])});CAL=[];let d=new Date(START);while(CAL.length<N){if(!S.off[iso(d)])CAL.push(d);d=addDays(d,1)}tStart=TOP.map((_,i)=>Math.min(...Q.filter(q=>q[1]===i).map(q=>q[4])))}
+recalc();
+const dateOf=d=>CAL[d-1];
+const dayInfo=()=>{const t=today0(),ti=iso(t);if(t<CAL[0])return{day:0,off:false};const i=CAL.findIndex(c=>iso(c)===ti);if(i>=0)return{day:i+1,off:false};const j=CAL.findIndex(c=>c>t);return j<0?{day:N+1,off:false}:{day:j+1,off:true}};
+const dayNum=()=>dayInfo().day;
+const root=document.documentElement,hostTheme=root&&root.dataset?root.dataset.theme:undefined;let theme='auto',optsOpen=false,mockIds=[];
+try{theme=localStorage.getItem('a2z-theme')||'auto'}catch(e){}
+function applyTheme(){if(!root||!root.dataset)return;if(theme==='auto'){if(hostTheme)root.dataset.theme=hostTheme;else delete root.dataset.theme}else root.dataset.theme=theme}
+applyTheme();
+const hrs=m=>(m/60).toFixed(1).replace('.0','')+' h';
+let viewDay=Math.min(N,Math.max(1,dayNum())),selDay=viewDay,curT=0,view='today',focusId=null,planMode='road';
+const mark=()=>{S.act[iso(today0())]=1};
+function streak(){let n=0;const d=today0();if(!S.act[iso(d)])d.setDate(d.getDate()-1);while(S.act[iso(d)]){n++;d.setDate(d.getDate()-1)}return n}
+const dayQs=d=>Q.filter(q=>q[4]===d);
+const isDone=q=>!!(S.q[q[0]]&&S.q[q[0]].s);
+
+const isLearn=d=>PL[d-1][2]==='Learn';
+const dsaMin=d=>isLearn(d)?dayQs(d).reduce((a,q)=>a+q[3],0)+TH.reduce((a,m,i)=>a+(tStart[i]===d?m:0),0):390;
+const dayPct=d=>{const qs=dayQs(d),L=isLearn(d);return ((L?qs.filter(isDone).length:(S.dd[d]?1:0))+(S.c[d]?1:0)+(S.j[d]?1:0))/((L?qs.length:1)+2)};
+const ring=(p,sz,sw,txt)=>{const r=(sz-sw)/2,c=2*Math.PI*r,m=sz/2;return `<svg class="ring" width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" role="img" aria-label="${txt}"><circle cx="${m}" cy="${m}" r="${r}" fill="none" stroke="var(--line)" stroke-width="${sw}"/><circle cx="${m}" cy="${m}" r="${r}" fill="none" stroke="var(--grn)" stroke-width="${sw}" stroke-linecap="${p>0?'round':'butt'}" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${m} ${m})"/><text x="${m}" y="${m}" text-anchor="middle" dominant-baseline="central" font-size="${Math.round(sz*.24)}" font-weight="700">${txt}</text></svg>`};
+const dueOn=v=>{const d=new Date(v.d+'T00:00');d.setDate(d.getDate()+GAP[v.r]);return d};
+const flagged=()=>Q.filter(q=>{const v=S.q[q[0]];return v&&v.s&&v.s!=='g'&&v.r<3});
+const dueList=()=>{const t=today0();return flagged().filter(q=>dueOn(S.q[q[0]])<=t)};
+const seg=id=>{const s=S.q[id]&&S.q[id].s;return `<div class="seg" role="group" aria-label="How it went">${[['g','✓ Solved'],['y','Hint used'],['r','Saw solution']].map(([k,l])=>`<button class="${k}${s===k?' on':''}" data-id="${id}" data-s="${k}">${l}</button>`).join('')}</div>`};
+function qcard(q,showDay){const t=S.t[q[0]],run=S.run&&S.run.id===q[0];
+  return `<div class="q"><div class="qh"><i class="dot" style="background:${TC(q[1])}"></i><div><div class="nm">${esc(q[2])}</div><div class="meta">${q[5]==='B'?'Basic':'Core'} · est. ${q[3]} min${t?` · took ${t} min`:''}${showDay?` · Day ${q[4]}`:''}</div></div><button class="btn tm${run?' on':''}" data-timer="${q[0]}">${run?'Stop':'Time it'}</button></div>${seg(q[0])}</div>`}
+const chk=(k,d,title,text)=>`<button class="chk${S[k][d]?' on':''}" data-chk="${k}" data-d="${d}" aria-pressed="${!!S[k][d]}"><span class="box">✓</span><span><b>${title}</b><br><span class="small">${esc(text)}</span></span></button>`;
+
+function renderHeader(){const dn=dayNum(),done=Q.filter(isDone).length;
+  const inf=dayInfo(),sd=d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});$('sub').textContent=(dn<1?`Starts ${fmt(CAL[0])}`:dn>N?'Plan finished':inf.off?`Paused · Day ${dn} next`:`Day ${dn} of ${N}`)+` · ends ${sd(CAL[N-1])} · ${done}/${Q.length} done`;
+  $('hring').innerHTML=ring(done/Q.length,56,6,Math.round(done/Q.length*100)+'%');
+  const n=dueList().length;$('bdg').hidden=!n;$('bdg').textContent=n}
+function focusQ(){const qs=dayQs(viewDay);if(focusId!=null){const f=Q.find(q=>q[0]===focusId);if(f)return f}return qs.find(q=>!isDone(q))||null}
+function renderToday(){const d=viewDay,p=PL[d-1],qs=dayQs(d),L=isLearn(d),dm=dsaMin(d),due=dueList().length,inf=dayInfo(),dn=inf.day,over=d===dn||dn>N?Q.filter(q=>q[4]<Math.min(dn,N+1)&&q[4]!==d&&!isDone(q)):[],f=L||focusId!=null?focusQ():null,st=streak();
+  const w0=Math.floor((d-1)/7)*7+1;let chain='';for(let k=w0;k<=Math.min(N,w0+6);k++)chain+=`<button class="wd${k===d?' on':''}" data-go="${k}" aria-label="Day ${k}">${ring(dayPct(k),38,4,k)}<span>${dateOf(k).toLocaleDateString('en-IN',{weekday:'short'})}</span></button>`;
+  let focus;
+  if(!L&&!f)focus=`<div class="focus" style="--tc:var(--blue)"><div class="fk">Revision day</div><div class="fn">Re-solve, then a timed mock</div><div class="fm">${hrs(dm)} planned</div><div style="margin-top:10px">${esc(p[6]).split('\n').map(x=>`<div class="li"><span class="sd"></span><span>${x}</span><span></span></div>`).join('')}</div><div class="frow"><button class="btn pri" data-nav="review">Open review queue${due?` (${due})`:''}</button></div></div>`;
+  if(f){const run=S.run&&S.run.id===f[0],t=S.t[f[0]],v=S.q[f[0]];
+    focus=`<div class="focus" style="--tc:${TC(f[1])}"><div class="fk">${run?'In progress':v?'Change your mark':'Next up'} · ${esc(SHORT[f[1]])}</div><div class="fn">${esc(f[2])}</div><div class="fm">${f[5]==='B'?'Basic':'Core'} · est. ${f[3]} min${t?` · took ${t} min`:''}</div>${run?`<div class="fclk"><b id="fclk">00:00</b><span>of ${f[3]} min</span></div><div class="fbar" id="fbarw"><i id="fbar"></i></div>`:''}<div class="frow">${run?`<button class="btn" data-timer="${f[0]}">Stop timer</button>`:`<button class="btn pri" data-timer="${f[0]}">Start timer</button>`}<button class="btn" data-open="${f[1]}">Watch the pattern</button></div><div class="fl">${run?'Finished? Tap how it went (this stops the timer)':'How did it go?'}</div>${seg(f[0])}<textarea data-note="${f[0]}" aria-label="Your note" placeholder="Key idea in one line. It comes back at revision time.">${esc(S.n[f[0]]||'')}</textarea></div>`}
+  else if(L)focus=`<div class="focus" style="--tc:var(--grn)"><div class="fk">Day ${d}</div><div class="fn">${qs.length?`All ${qs.length} questions marked`:'No questions left on this day'}</div><div class="fm">Finish core CS and the job track below, then clear the review queue.</div><div class="frow"><button class="btn pri" data-nav="review">Review queue${due?` (${due})`:''}</button>${d<N?`<button class="btn" data-go="${d+1}">Peek at Day ${d+1}</button>`:''}</div></div>`;
+  $('v-today').innerHTML=`<div class="cols"><div class="stack">
+  <div class="card"><div class="daynav"><button class="btn" id="dprev" aria-label="Previous day" ${d<=1?'disabled':''}>‹</button><div><b>Day ${d}</b><div class="small">${fmt(dateOf(d))} · ${hrs(dm+(L?165:105))} planned${d===dn?' · today':''}</div></div><button class="btn" id="dnext" aria-label="Next day" ${d>=N?'disabled':''}>›</button></div><div class="week">${chain}</div><div class="streak"><span><b>${st}</b>-day streak</span><span class="small">${Math.round(dayPct(d)*100)}% of Day ${d} done</span></div><button class="btn wide" style="margin-top:10px" data-act="opts">Can't finish today? Replan, pause or take a day off</button></div>
+  ${inf.off&&d===dn?`<div class="banner"><b>${over.length?'Catch-up day.':'Plan paused today.'}</b> ${over.length?`Finish the ${over.length} open question${over.length>1?'s':''} listed here; nothing new today. `:''}Day ${dn} is set for ${fmt(CAL[dn-1])}.<div class="brow"><button class="btn" data-act="resume">Resume today</button></div></div>`:''}${over.length&&!inf.off?`<div class="banner"><b>${over.length} question${over.length>1?'s':''} from earlier days still open.</b> Clear them now, or shift the whole plan a day to catch up.<div class="brow"><button class="btn" data-pause="1">Shift plan 1 day</button></div></div>`:''}
+  ${focus}</div><div class="stack">
+  ${L?`<div class="card"><h3>Today's questions · ${qs.filter(isDone).length} of ${qs.length}</h3><div class="small" style="margin-bottom:4px">Tap one to bring it up. Revision first: ${due?`${due} due.`:'nothing due yet.'}</div>${qs.map(q=>{const v=S.q[q[0]],t=S.t[q[0]];return `<button class="qr${f&&f[0]===q[0]?' on':''}" data-focus="${q[0]}"><span class="sd ${v?v.s:''}"></span><span>${esc(q[2])}</span><span class="small">${t?t+' min':'~'+q[3]+' min'}</span></button>`}).join('')}</div>`:chk('dd',d,'Revision day done','Tick when the re-solves and the mock are finished')}
+  ${over.length?`<div class="card"><h3>Open from earlier days · ${over.length}</h3>${over.map(q=>`<button class="qr${f&&f[0]===q[0]?' on':''}" data-focus="${q[0]}"><span class="sd"></span><span>${esc(q[2])}</span><span class="small">Day ${q[4]}</span></button>`).join('')}</div>`:''}
+  ${chk('c',d,'Core CS · 60 min',p[4])}${chk('j',d,'Job track · 45 min',p[5])}
+  </div></div>`}
+function renderPlan(){const dn=dayNum(),d=selDay,p=PL[d-1],qs=dayQs(d),L=isLearn(d);
+  const byDate={};CAL.forEach((c,i)=>{byDate[iso(c)]=i+1});let cells='',cd=addDays(CAL[0],-((CAL[0].getDay()+6)%7));
+  while(cd<=CAL[N-1]){const k=byDate[iso(cd)];if(k){const ts=[...new Set(dayQs(k).map(q=>q[1]))];cells+=`<button class="cell${k===d?' sel':''}${k===dn?' now':''}${isLearn(k)?'':' rev'}" data-day="${k}" style="--p:${Math.round(dayPct(k)*100)}%" aria-label="Day ${k}, ${fmt(cd)}"><b>${k}</b><span class="dots">${isLearn(k)?ts.map(t=>`<i style="background:${TC(t)}"></i>`).join(''):'Rev'}</span></button>`}else cells+=S.off[iso(cd)]&&cd>=START?`<div class="cell off">Off</div>`:`<div class="cell blank"></div>`;cd=addDays(cd,1)}
+  $('v-plan').innerHTML=`<div class="sw"><button class="${planMode==='road'?'on':''}" data-pm="road">Roadmap</button><button class="${planMode==='cal'?'on':''}" data-pm="cal">Calendar</button></div><div ${planMode==='road'?'':'hidden'}><div class="card"><h3>Your route through 15 topics</h3><div class="small">Tap a stop to watch its pattern. Rings fill as you mark questions.</div><svg id="jsvg"></svg></div></div><div class="cols" ${planMode==='cal'?'':'hidden'}><div><h2>${N} days at a glance</h2><div class="card"><div class="wk">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(w=>`<div class="hd">${w}</div>`).join('')}${cells}</div><div class="small" style="margin-top:8px">Numbers are plan days, laid out on real dates. Cells fill green as you finish. Dashed days are revision, dotted are days off.</div></div>
+  <h2>Topics</h2><div class="chips wrapc">${TOP.map((t,i)=>`<button class="chip" data-open="${i}"><i class="dot" style="background:${TC(i)}"></i>${esc(SHORT[i])}<span>D${tStart[i]}</span></button>`).join('')}</div></div>
+  <div><h2>Day ${d} · ${fmt(dateOf(d))}</h2><div class="card"><div class="nums"><div><b>${hrs(dsaMin(d)+(L?165:105))}</b><span>total</span></div><div><b>${L?qs.length:'Mock'}</b><span>${L?'new questions':'+ re-solves'}</span></div><div><b>${Math.round(dayPct(d)*100)}%</b><span>done</span></div></div>
+  <div style="margin-top:10px">${L?qs.map(q=>`<div class="li"><span class="sd ${(S.q[q[0]]&&S.q[q[0]].s)||''}"></span><span>${esc(q[2])}</span><span class="small">${q[3]}m</span></div>`).join(''):esc(p[6]).split('\n').map(x=>`<div class="li"><span class="sd"></span><span>${x}</span><span></span></div>`).join('')}
+  <div class="li"><span class="sd ${S.c[d]?'g':''}"></span><span><b>Core CS:</b> ${esc(p[4])}</span><span class="small">60m</span></div><div class="li"><span class="sd ${S.j[d]?'g':''}"></span><span><b>Job:</b> ${esc(p[5])}</span><span class="small">45m</span></div></div>
+  <button class="btn pri wide" style="margin-top:10px" data-go="${d}">Open Day ${d}</button></div></div></div>`;drawJourney()}
+function drawJourney(){const el=$('jsvg');if(!el||view!=='plan'||planMode!=='road')return;const W=el.clientWidth||340,step=98,H=TOP.length*step+30,amp=Math.min(W*.24,170),r=30,c=2*Math.PI*(r-4);
+  const pts=TOP.map((_,i)=>({x:W/2+Math.sin(i*1.05)*amp,y:50+i*step})),st=TOP.map((_,i)=>{const qs=Q.filter(q=>q[1]===i),k=qs.filter(isDone).length,ds=qs.map(q=>q[4]);return {n:qs.length,k,a:Math.min(...ds),b:Math.max(...ds)}}),cur=st.findIndex(s=>s.k<s.n);
+  let s='';for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],my=(a.y+b.y)/2,ok=st[i-1].k>=st[i-1].n;s+=`<path d="M${a.x} ${a.y} C${a.x} ${my} ${b.x} ${my} ${b.x} ${b.y}" fill="none" stroke="${ok?'var(--grn)':'var(--line)'}" stroke-width="6" stroke-linecap="round" ${ok?'':'stroke-dasharray="2 12"'}/>`}
+  pts.forEach((p,i)=>{const z=st[i],f=z.k/z.n,done=f>=1,right=p.x<=W/2,lx=right?p.x+r+12:p.x-r-12,an=right?'start':'end';
+    s+=`<g data-open="${i}" role="button" aria-label="${esc(TOP[i])}">${i===cur?`<circle cx="${p.x}" cy="${p.y}" r="${r+7}" fill="none" stroke="var(--hi)" stroke-width="4"/>`:''}<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${done?'var(--grn)':'var(--card)'}" stroke="var(--line)" stroke-width="2"/><circle cx="${p.x}" cy="${p.y}" r="${r-4}" fill="none" stroke="${TC(i)}" stroke-width="6" stroke-linecap="${f>0?'round':'butt'}" stroke-dasharray="${(c*f).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${p.x} ${p.y})"/><text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="700" ${done?'style="fill:#fff"':''}>${done?'✓':Math.round(f*100)+'%'}</text><text x="${lx}" y="${p.y-9}" text-anchor="${an}" font-size="16" font-weight="700" dominant-baseline="central">${esc(SHORT[i])}</text><text x="${lx}" y="${p.y+12}" text-anchor="${an}" font-size="13" dominant-baseline="central" style="fill:var(--mute)">${i===cur?'You are here · ':''}${z.k}/${z.n} · Day${z.a===z.b?' '+z.a:'s '+z.a+'–'+z.b}</text></g>`});
+  el.setAttribute('viewBox',`0 0 ${W} ${H}`);el.style.height=H+'px';el.innerHTML=s}
+function renderReview(){const due=dueList(),t=today0(),later=flagged().filter(q=>dueOn(S.q[q[0]])>t).sort((a,b)=>dueOn(S.q[a[0]])-dueOn(S.q[b[0]])),cleared=Q.filter(q=>S.q[q[0]]&&S.q[q[0]].s&&S.q[q[0]].s!=='g'&&S.q[q[0]].r>=3).length;
+  const card=q=>{const v=S.q[q[0]];return `<div class="q"><div class="qh"><i class="dot" style="background:${TC(q[1])}"></i><div><div class="nm">${esc(q[2])}</div><div class="meta">${v.s==='r'?'Saw solution':'Hint used'} · re-solve ${v.r+1} of 3 · about ${Math.max(10,Math.round(q[3]*.35/5)*5)} min</div></div><button class="btn tm" data-open="${q[1]}">Watch</button></div><div class="seg" style="grid-template-columns:1fr 1fr"><button class="g" data-rev="${q[0]}">✓ Re-solved from blank</button><button class="r" data-stuck="${q[0]}">Still stuck</button></div>${S.n[q[0]]?`<details class="note"><summary>Show my note (try without it first)</summary>${esc(S.n[q[0]])}</details>`:''}</div>`};
+  const mk=mockIds.map(id=>Q.find(q=>q[0]===id)).filter(Boolean),mt=mk.reduce((a,q)=>a+Math.round(q[3]*.6/5)*5,0);
+  $('v-review').innerHTML=`<div class="cols"><div><h2>Due now (${due.length})</h2><div class="stack">${due.length?due.map(card).join(''):`<div class="card empty">Nothing due. Questions you mark “Hint used” or “Saw solution” come back here after 1, 3 and 7 days.</div>`}</div></div>
+  <div><h2>Coming up (${later.length})</h2><div class="card">${later.length?later.map(q=>{const n=Math.round((dueOn(S.q[q[0]])-t)/DAY);return `<div class="li"><span class="sd ${S.q[q[0]].s}"></span><span>${esc(q[2])}</span><span class="small">in ${n} day${n>1?'s':''}</span></div>`}).join(''):'<div class="empty">No re-solves scheduled.</div>'}</div>
+  <div class="card" style="margin-top:10px"><h3>Timed mock</h3><div class="small">Three random questions you have already done, under interview time pressure.</div>${mk.length?mk.map(q=>`<div class="li"><i class="dot" style="background:${TC(q[1])}"></i><span>${esc(q[2])}</span><span class="small">${Math.round(q[3]*.6/5)*5} min</span></div>`).join('')+`<div class="small" style="margin-top:6px">Target: ${mt} minutes total, no notes, explain aloud.</div>`:''}<button class="btn wide" style="margin-top:8px" data-act="mock">${mk.length?'Pick another three':'Pick three questions'}</button></div>
+  <div class="card" style="margin-top:10px"><div class="nums"><div><b>${cleared}</b><span>cleared after 3 re-solves</span></div><div><b>${flagged().length}</b><span>still in the queue</span></div></div></div></div></div>`}
+function renderStats(){const done=Q.filter(isDone),n=Q.length,cnt=k=>Q.filter(q=>S.q[q[0]]&&S.q[q[0]].s===k).length,g=cnt('g'),y=cnt('y'),r=cnt('r');
+  const dm=done.reduce((a,q)=>a+q[3],0),tm=Q.reduce((a,q)=>a+q[3],0),dd=PL.filter((_,i)=>dayPct(i+1)>=1).length,dn=dayNum();
+  const tk=Object.keys(S.t).map(Number).filter(id=>Q.find(q=>q[0]===id)),act=tk.reduce((a,id)=>a+S.t[id],0),est=tk.reduce((a,id)=>a+Q.find(q=>q[0]===id)[3],0),ratio=est?act/est:0;
+  const mx=Math.max(...PL.map((_,i)=>dsaMin(i+1)));
+  $('v-stats').innerHTML=`<div class="cols"><div class="stack">
+  <div class="card"><div class="hero">${ring(done.length/n,110,12,Math.round(done.length/n*100)+'%')}<div class="nums"><div><b>${done.length}/${n}</b><span>questions</span></div><div><b>${hrs(dm)}</b><span>of ${hrs(tm)}</span></div><div><b>${dd}/${N}</b><span>days complete</span></div><div><b>${streak()}</b><span>day streak</span></div></div></div></div>
+  <div class="card"><h3>How the solves went</h3><div class="tbar">${[[g,'var(--grn)'],[y,'var(--ylw)'],[r,'var(--red)'],[n-g-y-r,'var(--paper)']].map(b=>`<i style="width:${b[0]/n*100}%;background:${b[1]}"></i>`).join('')}</div><div class="leg"><span><i style="background:var(--grn)"></i>Solved alone ${g}</span><span><i style="background:var(--ylw)"></i>Hint used ${y}</span><span><i style="background:var(--red)"></i>Saw solution ${r}</span><span><i style="background:var(--line)"></i>Not started ${n-g-y-r}</span></div></div>
+  <div class="card"><h3>Your pace against the estimates</h3>${tk.length?`<div class="nums"><div><b>${ratio.toFixed(2)}×</b><span>of estimated time</span></div><div><b>${tk.length}</b><span>questions timed</span></div><div><b>${hrs(tm*ratio)}</b><span>projected total</span></div></div><div class="small" style="margin-top:8px">${ratio>1.25?'You are over 25% slower than planned: expect about a week extra, or trim the day.':ratio<.85?'You are ahead of the estimates: consider adding Hard questions.':'You are close to plan.'}</div>`:'<div class="empty">Tap “Time it” on a question to measure yourself. After a few, this shows whether the plan still holds.</div>'}</div>
+  <div class="card"><h3>Day by day</h3><div class="dbars">${PL.map((_,i)=>`<button class="${i+1===dn?'now':''}" data-go="${i+1}" style="height:${Math.round(dsaMin(i+1)/mx*100)}%;--p:${Math.round(dayPct(i+1)*100)}%" aria-label="Day ${i+1}"></button>`).join('')}</div><div class="small" style="margin-top:6px">Bar height is the day's DSA load; green is how much is done. Tap a bar to open that day.</div></div>
+  </div><div class="card"><h3>By topic</h3>${TOP.map((t,i)=>{const qs=Q.filter(q=>q[1]===i),k=qs.filter(isDone).length;return `<button class="trow" data-open="${i}"><span>${esc(SHORT[i])}</span><span class="bar"><i style="width:${k/qs.length*100}%;background:${TC(i)}"></i></span><em>${k}/${qs.length}</em></button>`}).join('')}</div></div>`}
+function renderLearnLists(){$('chips').innerHTML=TOP.map((t,i)=>{const qs=Q.filter(q=>q[1]===i);return `<button class="chip${i===curT?' on':''}" data-open="${i}"><i class="dot" style="background:${TC(i)}"></i>${esc(SHORT[i])}<span>${qs.filter(isDone).length}/${qs.length}</span></button>`}).join('');
+  const qs=Q.filter(q=>q[1]===curT);$('tqs').textContent=`${TOP[curT]}: ${qs.length} questions`;$('tlist').innerHTML=qs.map(q=>qcard(q,true)).join('')}
+let tick=null;
+function timerUI(){const r=S.run,b=$('tbar');clearInterval(tick);tick=null;const q=r&&Q.find(x=>x[0]===r.id);if(!q){b.hidden=true;return}
+  b.innerHTML=`<div><b id="tclk"></b> <span id="test"></span><div class="tn">${esc(q[2])}</div></div><button class="btn" data-timer="${q[0]}">Stop</button>`;b.hidden=false;
+  const upd=()=>{const s=Math.max(0,Math.floor((Date.now()-r.start)/1000)),over=s>q[3]*60;$('tclk').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');$('test').textContent=`/ ${q[3]} min`+(over?' · over':'');b.classList.toggle('over',over);const fc=$('fclk'),fb=$('fbar'),fw=$('fbarw');if(fc&&fb&&fw){fc.textContent=$('tclk').textContent;fb.style.width=Math.min(100,s/(q[3]*60)*100)+'%';fw.classList.toggle('over',over)}};upd();tick=setInterval(upd,1000)}
+function toggleTimer(id){if(S.run&&S.run.id===id){S.t[id]=Math.max(1,Math.round((Date.now()-S.run.start)/6e4));S.run=null}else S.run={id,start:Date.now()};save();renderAll()}
+function setStatus(id,st){const cur=S.q[id];if(S.run&&S.run.id===id){S.t[id]=Math.max(1,Math.round((Date.now()-S.run.start)/6e4));S.run=null}if(cur&&cur.s===st)delete S.q[id];else{S.q[id]={s:st,d:iso(today0()),r:0};mark();if(focusId===id)focusId=null}save();renderAll()}
+function renderOpts(){const el=$('opts');el.hidden=!optsOpen;if(!optsOpen)return;const t=iso(today0()),offs=Object.keys(S.off).filter(k=>k>=iso(START)).sort(),fut=offs.filter(k=>k>=t).length,mv=Object.keys(S.mv).length,d=viewDay,oq=dayQs(d).filter(q=>!isDone(q)),open=oq.length,om=oq.reduce((a,q)=>a+q[3],0),nx=(()=>{let n=d+1;while(n<=N&&!isLearn(n))n++;return n<=N?n:0})(),rb=rebalPlan(d+1),pl=optLen||N,from0=Math.min(pl,Math.max(1,dayNum())),pv=rebalPlan(from0,pl),curp=rebalPlan(Math.min(N,Math.max(1,dayNum()))),sd=x=>x.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  el.innerHTML=`<h3>Appearance</h3><div class="seg">${[['auto','Match device'],['light','Light'],['dark','Dark']].map(([k,l])=>`<button class="${theme===k?'g on':''}" data-theme-set="${k}">${l}</button>`).join('')}</div>
+  <h3>Schedule</h3><div class="small">Plan runs ${sd(CAL[0])} to ${sd(CAL[N-1])}${offs.length?`, with ${offs.length} day${offs.length>1?'s':''} off`:''}. Time off pushes every later day back; nothing is dropped.</div>
+  <div class="brow"><button class="btn" data-pause="1">Take a day off</button><button class="btn" data-pause="3">Pause 3 days</button><button class="btn" data-pause="7">Pause 1 week</button>${fut?`<button class="btn" data-act="resume">Resume today</button>`:''}${offs.length?`<button class="btn" data-act="clearoff">Remove all time off</button>`:''}</div>
+  <h3>Plan length</h3><div class="small">Make the plan longer for lighter days, or shorter for heavier ones. Open questions are re-spread; finished ones stay where they are.</div>
+  <div class="brow" style="grid-template-columns:repeat(5,minmax(0,1fr))"><button class="btn" data-len="-5" ${pl-5<10?'disabled':''}>−5</button><button class="btn" data-len="-1" ${pl-1<10?'disabled':''}>−1</button><div style="text-align:center"><b style="font-size:22px">${pl}</b><div class="small">days</div></div><button class="btn" data-len="1" ${pl+1>60?'disabled':''}>+1</button><button class="btn" data-len="5" ${pl+5>60?'disabled':''}>+5</button></div>
+  <div class="small" style="margin-top:8px">${pl===N?`Now: ${curp.q} open questions over ${curp.n} learning days, about ${hrs(curp.avg)} of new DSA a day.`:`${pl} days: ${pv.n} learning days, about ${hrs(pv.avg)} of new DSA a day (now ${hrs(curp.avg)}). Ends ${sd(addDays(CAL[N-1],pl-N))}.`}</div>
+  ${pl!==N?`<div class="brow"><button class="btn pri" data-act="applylen">Change to ${pl} days</button><button class="btn" data-act="cancellen">Cancel</button></div>`:''}
+  <h3>Can't finish Day ${d}?</h3>${open?`<div class="small">${open} question${open===1?'':'s'} still open (about ${hrs(om)}). Pick how to replan:</div>
+  <div class="stack" style="margin-top:8px">
+  ${nx?`<button class="chk" data-act="carry"><span class="box" style="color:var(--mute)">1</span><span><b>Add the rest to Day ${nx}</b><br><span class="small">End date stays ${sd(CAL[N-1])}. Day ${nx} grows to about ${hrs(dsaMin(nx)+om)} of DSA.</span></span></button>`:''}
+  <button class="chk" data-act="catchup"><span class="box" style="color:var(--mute)">2</span><span><b>Make the next day a catch-up day</b><br><span class="small">Finish these on ${fmt(addDays(CAL[d-1],1))}, with nothing new. Everything after moves one day; the plan ends ${sd(addDays(CAL[N-1],1))}.</span></span></button>
+  ${rb.n?`<button class="chk" data-act="rebal"><span class="box" style="color:var(--mute)">3</span><span><b>Replan: same number of days, slightly heavier days</b><br><span class="small">End date stays ${sd(CAL[N-1])}. ${rb.q} open questions across ${rb.n} learning days: about ${hrs(rb.avg)} of DSA a day.</span></span></button>`:''}
+  </div>`:`<div class="small">Day ${d} has no open questions.</div>`}
+  ${mv?`<div class="brow"><button class="btn" data-act="unmove">Undo: put ${mv} moved question${mv>1?'s':''} back</button></div>`:''}
+  ${inClaude()?'':`<h3>Sync between devices</h3>${gtok?`<div class="small">${ref?'Connected. Progress is kept in a private gist on your GitHub account and checked every 45 seconds.':'Not connected yet.'} ${esc(gmsg)}</div><div class="brow"><button class="btn" data-act="gsync">Sync now</button><button class="btn" data-act="goff">Disconnect this device</button></div>`:`<div class="small">Paste a GitHub token that has only the “gist” permission. Do this once on each device. The token stays in this browser and is sent only to GitHub. ${esc(gmsg)}</div><div class="vizbar" style="margin-top:8px"><input type="password" id="gtokin" aria-label="GitHub token" placeholder="GitHub token" autocomplete="off"><button class="btn pri" data-act="gon">Connect</button></div>`}`}
+  <h3>Backup and move between devices</h3><div class="small">Your whole progress as a block of text. Copy it on one device and restore it on another, or keep a copy somewhere safe.</div>
+  <div class="brow"><button class="btn" data-act="bkcopy">Copy backup code</button><button class="btn" data-act="bkfile">Download backup file</button><button class="btn" data-act="bkopen">${bkOpen?'Hide restore':'Restore from a backup'}</button></div>
+  ${bkOpen?`<textarea id="bktxt" aria-label="Backup code" placeholder="Paste a backup code here, or choose a backup file below"></textarea><input type="file" id="bkfilein" accept=".json,.txt,application/json" style="margin-top:8px;font-size:16px;max-width:100%"><div class="brow"><button class="btn pri" data-act="bkrestore">Replace my progress with this backup</button></div>`:''}
+  <div class="small" id="bkmsg" style="margin-top:6px">${esc(bkMsg)}</div>
+  <button class="btn wide" style="margin-top:14px" data-act="opts">Close</button>`}
+function rebalPlan(from,n){n=n||N;const days=learnDays(from,n);const open=Q.filter(q=>!isDone(q)).sort((a,b)=>a[6]-b[6]||a[0]-b[0]),T=open.reduce((a,q)=>a+q[3],0);return {days,open,T,n:days.length,q:open.length,avg:days.length?T/days.length:0}}
+function rebalance(from){const p=rebalPlan(from);if(!p.n)return;let i=0,cum=0;p.days.forEach((day,k)=>{const target=p.T*(k+1)/p.n;while(i<p.open.length&&(k===p.n-1||cum+p.open[i][3]/2<=target)){const q=p.open[i++];cum+=q[3];if(day===q[6])delete S.mv[q[0]];else S.mv[q[0]]=day}});const keep=viewDay;afterSched();viewDay=selDay=keep;renderAll()}
+function catchUp(d){let x=addDays(CAL[d-1],1);while(S.off[iso(x)])x=addDays(x,1);S.off[iso(x)]=1;const keep=viewDay;afterSched();viewDay=selDay=keep;renderAll()}
+function afterSched(){save();recalc();focusId=null;viewDay=selDay=Math.min(N,Math.max(1,dayNum()));renderAll()}
+function setLength(n){const from=Math.min(n,Math.max(1,dayNum()));S.len=n;recalc();const p=rebalPlan(from);if(!p.n){afterSched();return}let i=0,cum=0;p.days.forEach((day,k)=>{const target=p.T*(k+1)/p.n;while(i<p.open.length&&(k===p.n-1||cum+p.open[i][3]/2<=target)){const q=p.open[i++];cum+=q[3];if(day===q[6])delete S.mv[q[0]];else S.mv[q[0]]=day}});optLen=0;afterSched()}
+function pauseDays(n){let d=today0();if(d<START)d=new Date(START);let k=0;while(k<n){if(!S.off[iso(d)]){S.off[iso(d)]=1;k++}d=addDays(d,1)}afterSched()}
+function resume(){const t=iso(today0());for(const k of Object.keys(S.off))if(k>=t)delete S.off[k];afterSched()}
+function carry(d){let n=d+1;while(n<=N&&!isLearn(n))n++;if(n>N)return;dayQs(d).filter(q=>!isDone(q)).forEach(q=>{S.mv[q[0]]=n});const keep=d;afterSched();viewDay=selDay=keep;renderAll()}
+function renderAll(){renderOpts();renderHeader();renderToday();renderPlan();renderReview();renderStats();renderLearnLists();timerUI()}
+const VIEWS=['today','plan','learn','review','stats'];
+function show(v,push){if(!VIEWS.includes(v))v='today';view=v;VIEWS.forEach(k=>{$('v-'+k).hidden=k!==v});[...$('tabs').children].forEach(b=>b.classList.toggle('on',b.dataset.nav===v));if(push){try{if(location.hash!=='#'+v)location.hash=v}catch(e){}try{window.scrollTo(0,0)}catch(e){}}if(v==='learn')draw();if(v==='plan')drawJourney()}
+/* ---------- drawing helpers ---------- */
+const C={hi:'var(--hi)',red:'var(--red)',grn:'var(--grn)',blue:'var(--blue)',ink:'var(--ink)',mute:'var(--mute)',card:'var(--card)',line:'var(--line)',paper:'var(--paper)'};
+const T=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.fs||14}" font-weight="${o.w||400}" ${o.fill?`style="fill:${o.fill}"`:''} dominant-baseline="middle">${esc(s)}</text>`;
+const R=(x,y,w,h,f,st,rx=6)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${f}" stroke="${st||C.line}" stroke-width="1.5"/>`;
+const L=(x1,y1,x2,y2,c=C.mute,w=2,arrow)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" ${arrow?'marker-end="url(#ar)"':''}/>`;
+const CI=(x,y,r,f,st)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st||C.ink}" stroke-width="1.5"/>`;
+const DEFS=`<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--mute)"/></marker></defs>`;
+function cells(W,y,arr,o={}){ // row of boxes; o.fill(i), o.top(i) label above, o.sub index
+  const n=arr.length,pad=12,cw=Math.min(56,(W-2*pad)/n),x0=(W-cw*n)/2;let s='';
+  arr.forEach((v,i)=>{const x=x0+i*cw;s+=R(x+2,y,cw-4,cw-4,o.fill?o.fill(i):C.card,o.stroke?o.stroke(i):C.line);s+=T(x+cw/2,y+(cw-4)/2,v,{fs:Math.min(16,cw*.42),w:600});if(o.idx!==false)s+=T(x+cw/2,y+cw+6,i,{fs:11,fill:C.mute});});
+  return {s,cx:i=>x0+i*cw+cw/2,cw,x0};
+}
+function treeLayout(nodes,W,H,top=40){ // nodes: {id,l,r} keyed; returns pos by inorder index
+  const pos={};let k=0;const depth={};
+  const walk=(id,d)=>{if(id==null||!nodes[id])return;walk(nodes[id].l,d+1);pos[id]={k:k++,d};walk(nodes[id].r,d+1)};
+  walk(0,0);const n=k||1;const maxd=Math.max(0,...Object.values(pos).map(p=>p.d));
+  const dy=Math.min(64,(H-top-30)/Math.max(1,maxd));
+  for(const id in pos){pos[id].x=(pos[id].k+.5)*(W/n);pos[id].y=top+pos[id].d*dy}
+  return pos;
+}
+const parseNums=s=>s.split(/[ ,]+/).filter(x=>x!=='').map(Number).filter(x=>!isNaN(x));
+const kv=(s,k,def)=>{const m=s.match(new RegExp(k+'\\s*=\\s*(-?\\w+)'));return m?m[1]:def};
+const main=s=>s.split('|')[0];
+
+/* ---------- visualizers ---------- */
+const V=[];
+// 0 Hashing
+V[0]={title:'Count subarrays with sum K (prefix sum + hashmap)',def:'1, 2, 3, -3, 1, 2 | k=3',hint:'Numbers, then | k=target',
+code:['map = {0: 1}; pre = 0; count = 0','for x in arr:','    pre += x','    count += map[pre - k]   # earlier prefixes that leave sum k','    map[pre] += 1'],
+steps(s){const a=parseNums(main(s)).slice(0,12),k=+kv(s,'k',3);const st=[];let m={0:1},pre=0,cnt=0;st.push({a,k,i:-1,pre,m:{...m},cnt,line:0,msg:`Start: prefix 0 has been seen once. We want subarrays adding up to ${k}.`});
+a.forEach((x,i)=>{pre+=x;st.push({a,k,i,pre,m:{...m},cnt,need:pre-k,line:2,msg:`Add ${x}: prefix sum is now ${pre}. A subarray ending here sums to ${k} if an earlier prefix equals ${pre}-${k} = ${pre-k}.`});const f=m[pre-k]||0;cnt+=f;st.push({a,k,i,pre,m:{...m},cnt,need:pre-k,f,line:3,msg:f?`Prefix ${pre-k} was seen ${f} time(s) → ${f} new subarray(s). Count = ${cnt}.`:`Prefix ${pre-k} not seen yet → nothing new. Count = ${cnt}.`});m[pre]=(m[pre]||0)+1;st.push({a,k,i,pre,m:{...m},cnt,line:4,msg:`Store prefix ${pre} in the map (seen ${m[pre]} time(s)).`})});
+st.push({a,k,i:a.length,pre,m:{...m},cnt,line:1,msg:`Done. ${cnt} subarray(s) sum to ${k}. One pass, O(n) time.`});return st},
+draw(W,H,z){let s='';const c=cells(W,24,z.a,{fill:i=>i<=z.i?(i===z.i?C.hi:C.paper):C.card});s+=c.s;
+s+=T(W/2,c.cw+58,`prefix = ${z.pre}`+(z.need!=null?`    need ${z.pre}-${z.k} = ${z.need}`:''),{fs:16,w:600});
+const ks=Object.keys(z.m);const bw=Math.min(86,(W-24)/Math.max(4,ks.length));const x0=(W-bw*ks.length)/2;s+=T(W/2,c.cw+92,'map: prefix → times seen',{fs:13,fill:C.mute});
+ks.forEach((key,j)=>{const hit=z.need!=null&&+key===z.need;s+=R(x0+j*bw+3,c.cw+108,bw-6,44,hit?C.hi:C.card,hit?C.ink:C.line);s+=T(x0+j*bw+bw/2,c.cw+130,`${key} → ${z.m[key]}`,{fs:14,w:hit?700:400})});
+s+=T(W/2,H-34,`count = ${z.cnt}`,{fs:24,w:700});return s}};
+// 1 Binary search
+V[1]={title:'Lower bound: first index with arr[i] ≥ x',def:'1, 3, 3, 5, 8, 9, 12 | x=5',hint:'Sorted numbers, then | x=target',
+code:['lo = 0; hi = n-1; ans = n','while lo <= hi:','    mid = (lo + hi) // 2','    if arr[mid] >= x: ans = mid; hi = mid - 1','    else: lo = mid + 1','return ans'],
+steps(s){const a=parseNums(main(s)).sort((p,q)=>p-q).slice(0,14),x=+kv(s,'x',5);const st=[];let lo=0,hi=a.length-1,ans=a.length;st.push({a,x,lo,hi,ans,line:0,msg:`Search space is the whole array. ans starts at n=${a.length} (meaning "not found").`});
+while(lo<=hi){const mid=(lo+hi)>>1;st.push({a,x,lo,hi,mid,ans,line:2,msg:`mid = (${lo}+${hi})/2 = ${mid}, arr[mid] = ${a[mid]}.`});if(a[mid]>=x){ans=mid;hi=mid-1;st.push({a,x,lo,hi,mid,ans,line:3,msg:`${a[mid]} ≥ ${x}: index ${mid} could be the answer. Save it and look left for an earlier one.`})}else{lo=mid+1;st.push({a,x,lo,hi,mid,ans,line:4,msg:`${a[mid]} < ${x}: answer must be to the right. Throw away the left half.`})}}
+st.push({a,x,lo,hi,ans,line:5,msg:`lo > hi, stop. Lower bound = ${ans}${ans<a.length?` (value ${a[ans]})`:' (all values are smaller)'}. Halving each step → O(log n).`});return st},
+draw(W,H,z){let s='';const c=cells(W,60,z.a,{fill:i=>i===z.mid?C.hi:(i<z.lo||i>z.hi?C.paper:C.card),stroke:i=>i===z.ans?C.grn:C.line});s+=c.s;
+const mk=(i,lab,y,col)=>i>=0&&i<z.a.length?L(c.cx(i),y,c.cx(i),y-18,col,2,true)+T(c.cx(i),y+12,lab,{fs:14,w:700,fill:col}):'';
+const yb=60+c.cw+44;s+=mk(z.lo,'lo',yb,C.blue)+mk(z.hi,'hi',yb+(z.hi===z.lo?32:0),C.red)+(z.mid!=null?mk(z.mid,'mid',yb+(z.mid===z.lo||z.mid===z.hi?64:0),C.ink):'');
+s+=T(W/2,28,`x = ${z.x}`,{fs:16,w:600});s+=T(W/2,H-30,`ans = ${z.ans}`,{fs:22,w:700,fill:C.grn});return s}};
+// 2 Strings: longest palindrome
+V[2]={title:'Longest palindromic substring (expand around centre)',def:'babad',hint:'Any word, up to 14 letters',
+code:['best = ""','for each centre c (a letter, or a gap between two):','    l, r = edges of the centre','    while l >= 0 and r < n and s[l] == s[r]:','        l -= 1; r += 1','    keep s[l+1 .. r-1] if it is longer than best'],
+steps(s){const w=main(s).trim().slice(0,14)||'babad';const a=[...w];const st=[];let b=[0,0];
+for(let c=0;c<2*a.length-1;c++){let l=Math.floor(c/2),r=l+c%2;st.push({a,l,r,b:[...b],line:1,msg:`Centre ${c%2?`between ${l} and ${r}`:`at index ${l}`}.`});
+while(l>=0&&r<a.length&&a[l]===a[r]){st.push({a,l,r,b:[...b],ok:1,line:3,msg:`s[${l}]='${a[l]}' equals s[${r}]='${a[r]}' → expand.`});l--;r++}
+if(l>=0&&r<a.length)st.push({a,l,r,b:[...b],ok:0,line:3,msg:`s[${l}]='${a[l]}' ≠ s[${r}]='${a[r]}' → stop.`});
+if(r-l-1>b[1]-b[0]+1||(b[1]-b[0]===0&&r-l-1>1)){b=[l+1,r-1];st.push({a,l,r,b:[...b],line:5,msg:`New best: "${a.slice(b[0],b[1]+1).join('')}" (length ${b[1]-b[0]+1}).`})}}
+st.push({a,b,line:5,msg:`Answer: "${a.slice(b[0],b[1]+1).join('')}". 2n-1 centres × up to n expansion → O(n²), O(1) space.`});return st},
+draw(W,H,z){let s='';const c=cells(W,70,z.a,{fill:i=>z.l!=null&&(i===z.l||i===z.r)?(z.ok===0?C.paper:C.hi):(i>=z.b[0]&&i<=z.b[1]?'color-mix(in srgb,var(--grn) 25%,var(--card))':C.card),stroke:i=>z.l!=null&&(i===z.l||i===z.r)?(z.ok===0?C.red:C.ink):C.line});s+=c.s;
+if(z.l!=null){if(z.l>=0)s+=T(c.cx(z.l),50,'L',{fs:15,w:700,fill:C.blue});if(z.r<z.a.length)s+=T(c.cx(z.r),50,'R',{fs:15,w:700,fill:C.red})}
+s+=T(W/2,H-40,`best = "${z.a.slice(z.b[0],z.b[1]+1).join('')}"`,{fs:22,w:700,fill:C.grn});return s}};
+// 3 Recursion subsets
+V[3]={title:'Subsets: pick / not pick recursion tree',def:'1, 2, 3',hint:'Up to 4 numbers',
+code:['def f(i, cur):','    if i == n: output(cur); return','    f(i+1, cur + [arr[i]])   # pick','    f(i+1, cur)              # not pick'],
+steps(s){const a=parseNums(main(s)).slice(0,4);const n=a.length;const st=[];const vis=[];const out=[];
+const f=(i,cur,path)=>{vis.push(path);st.push({a,n,vis:[...vis],cur:path,out:[...out],line:i===n?1:0,msg:i===n?`Reached the end (i=${n}). Output [${cur.join(', ')}].`:`f(${i}, [${cur.join(', ')}]): decide about ${a[i]}.`});
+if(i===n){out.push('['+cur.join(',')+']');st.push({a,n,vis:[...vis],cur:path,out:[...out],line:1,msg:`Subsets found so far: ${out.length}. Return to the caller.`});return}
+f(i+1,[...cur,a[i]],path+'1');st.push({a,n,vis:[...vis],cur:path,out:[...out],line:3,msg:`Back at f(${i}). Now try NOT picking ${a[i]}.`});f(i+1,cur,path+'0')};
+f(0,[],'');st.push({a,n,vis:[...vis],cur:'x',out,line:0,msg:`All ${out.length} = 2^${n} subsets. Each level doubles the calls → O(2^n · n).`});return st},
+draw(W,H,z){let s='';const top=28,dy=(H-110-top)/Math.max(1,z.n);const P=p=>{const d=p.length;const idx=parseInt(p||'0',2)||0;let k=0;for(const ch of p)k=k*2+(ch==='1'?0:1);return {x:(k+.5)*W/2**d,y:top+d*dy}};
+for(const p of z.vis){if(p.length){const a=P(p),b=P(p.slice(0,-1));s+=L(b.x,b.y,a.x,a.y,p.endsWith('1')?C.grn:C.mute,2)}}
+for(const p of z.vis){const q=P(p);const on=p===z.cur;const r=Math.max(5,Math.min(14,W/2**(z.n+1)/2.4));s+=CI(q.x,q.y,r,on?C.hi:C.card,on?C.ink:C.mute);if(p.length===z.n){let cur=[];[...p].forEach((ch,i)=>{if(ch==='1')cur.push(z.a[i])});if(W/2**z.n>34)s+=T(q.x,q.y+22,'{'+cur.join(',')+'}',{fs:12})}}
+s+=T(12,H-58,'green edge = pick, grey = not pick',{a:'start',fs:12,fill:C.mute});s+=T(12,H-30,'out: '+z.out.join(' '),{a:'start',fs:13,w:600});return s}};
+// 4 Linked list reverse
+V[4]={title:'Reverse a linked list (prev / curr / next)',def:'1, 2, 3, 4, 5',hint:'Up to 7 values',
+code:['prev = null; curr = head','while curr:','    nxt = curr.next','    curr.next = prev','    prev = curr; curr = nxt','head = prev'],
+steps(s){const a=parseNums(main(s)).slice(0,7);const n=a.length;let nx=a.map((_,i)=>i+1<n?i+1:-1);const st=[];let prev=-1,curr=0;const snap=(line,msg,nxt)=>st.push({a,nx:[...nx],prev,curr,nxt,line,msg});
+snap(0,'prev = null, curr = head. Every arrow points right.');while(curr!==-1){const nxt=nx[curr];snap(2,`Save nxt = ${nxt===-1?'null':a[nxt]} so we don't lose the rest of the list.`,nxt);nx[curr]=prev;snap(3,`Point ${a[curr]}.next back to ${prev===-1?'null':a[prev]}.`,nxt);prev=curr;curr=nxt;snap(4,`Move prev to ${a[prev]} and curr to ${curr===-1?'null':a[curr]}.`)}
+snap(5,`curr is null. New head = ${a[prev]}. O(n) time, O(1) space.`);return st},
+draw(W,H,z){let s='';const n=z.a.length;const bw=Math.min(70,(W-40)/(n+1));const x0=(W-bw*(n+1))/2+bw/2;const y=H/2-10;const X=i=>i===-1?x0+n*bw:x0+i*bw;
+s+=R(X(-1)-18,y-16,36,32,C.paper,C.line)+T(X(-1),y,'null',{fs:12,fill:C.mute});
+z.a.forEach((v,i)=>{const t=z.nx[i];if(t===-1&&i===n-1){s+=L(X(i)+18,y,X(-1)-20,y,C.mute,2,true)}else if(t===-1){const p=`M${X(i)} ${y+20} Q ${(X(i)+X(-1))/2} ${y+90} ${X(-1)} ${y+18}`;s+=`<path d="${p}" fill="none" stroke="var(--mute)" stroke-width="2" marker-end="url(#ar)"/>`}else if(t>i){s+=L(X(i)+18,y,X(t)-20,y,C.mute,2,true)}else{const p=`M${X(i)} ${y-18} Q ${(X(i)+X(t))/2} ${y-70} ${X(t)+4} ${y-20}`;s+=`<path d="${p}" fill="none" stroke="var(--grn)" stroke-width="2.5" marker-end="url(#ar)"/>`}});
+z.a.forEach((v,i)=>{s+=CI(X(i),y,18,i===z.curr?C.hi:C.card,C.ink)+T(X(i),y,v,{fs:15,w:700})});
+const lab=(i,t,col,o)=>s+=T(X(i),y+48+o,t,{fs:13,w:700,fill:col});lab(z.prev,'prev',C.blue,0);lab(z.curr,'curr',C.ink,z.curr===z.prev?16:0);if(z.nxt!=null)lab(z.nxt,'nxt',C.red,z.nxt===z.curr?32:16);return s}};
+// 5 Greedy merge intervals
+V[5]={title:'Merge overlapping intervals (sort, then sweep)',def:'1-3, 2-6, 8-10, 15-18, 9-12',hint:'start-end pairs',
+code:['sort intervals by start','for [s, e] in intervals:','    if res is empty or s > res[-1].end: res.append([s, e])','    else: res[-1].end = max(res[-1].end, e)'],
+steps(s){const iv=main(s).split(/[ ,]+/).map(p=>p.split('-').map(Number)).filter(p=>p.length===2&&!isNaN(p[0])&&!isNaN(p[1])).slice(0,8).map(([a,b])=>[Math.min(a,b),Math.max(a,b)]);iv.sort((p,q)=>p[0]-q[0]);const st=[];const res=[];st.push({iv,res:[],i:-1,line:0,msg:'Sorted by start time, so any overlap must be with the last merged interval.'});
+iv.forEach(([a,b],i)=>{if(!res.length||a>res[res.length-1][1]){res.push([a,b]);st.push({iv,res:res.map(r=>[...r]),i,line:2,msg:`[${a},${b}] starts after ${res.length>1?res[res.length-2][1]:'nothing'} ends → start a new block.`})}else{const o=res[res.length-1][1];res[res.length-1][1]=Math.max(o,b);st.push({iv,res:res.map(r=>[...r]),i,line:3,msg:`[${a},${b}] overlaps the last block (ends ${o}) → stretch its end to ${res[res.length-1][1]}.`})}});
+st.push({iv,res,i:iv.length,line:1,msg:`${res.length} merged interval(s). Sorting dominates → O(n log n).`});return st},
+draw(W,H,z){let s='';if(!z.iv.length)return T(W/2,H/2,'Enter intervals like 1-3, 2-6');const mn=Math.min(...z.iv.map(p=>p[0])),mx=Math.max(...z.iv.map(p=>p[1]));const X=v=>24+(v-mn)/(mx-mn||1)*(W-48);const rh=Math.min(30,(H-130)/z.iv.length);
+z.iv.forEach(([a,b],i)=>{const y=20+i*rh;s+=R(X(a),y,Math.max(4,X(b)-X(a)),rh-8,i===z.i?C.hi:C.card,i===z.i?C.ink:C.line,4)+T(X(a)-4,y+(rh-8)/2,`${a}-${b}`,{a:'end',fs:12,fill:C.mute})});
+const yr=H-80;s+=T(24,yr-14,'merged',{a:'start',fs:13,fill:C.mute});z.res.forEach(([a,b])=>{s+=R(X(a),yr,Math.max(4,X(b)-X(a)),30,'color-mix(in srgb,var(--grn) 35%,var(--card))',C.grn,4)+T((X(a)+X(b))/2,yr+15,`${a}-${b}`,{fs:13,w:600})});
+s+=L(24,H-28,W-24,H-28,C.line,1);[mn,mx].forEach(v=>s+=T(X(v),H-14,v,{fs:12,fill:C.mute}));return s}};
+// 6 Sliding window
+V[6]={title:'Longest substring without repeating characters',def:'abcabcbb',hint:'Any string, up to 14 chars',
+code:['l = 0; last = {}; best = 0','for r in range(n):','    if s[r] in last and last[s[r]] >= l: l = last[s[r]] + 1','    last[s[r]] = r','    best = max(best, r - l + 1)'],
+steps(s){const a=[...(main(s).trim()||'abcabcbb')].slice(0,14);const st=[];let l=0,best=0,bl=0;const last={};
+a.forEach((ch,r)=>{st.push({a,l,r,last:{...last},best,bl,line:1,msg:`Window grows: r = ${r} ('${ch}').`});if(ch in last&&last[ch]>=l){l=last[ch]+1;st.push({a,l,r,last:{...last},best,bl,line:2,msg:`'${ch}' is already inside the window (at ${last[ch]}) → jump l to ${l}.`,bad:1})}last[ch]=r;if(r-l+1>best){best=r-l+1;bl=l}st.push({a,l,r,last:{...last},best,bl,line:4,msg:`Window "${a.slice(l,r+1).join('')}" has length ${r-l+1}. Best = ${best}.`})});
+st.push({a,l:bl,r:bl+best-1,last,best,bl,line:4,msg:`Answer ${best}: "${a.slice(bl,bl+best).join('')}". Each pointer only moves forward → O(n).`});return st},
+draw(W,H,z){let s='';const c=cells(W,60,z.a,{fill:i=>i>=z.l&&i<=z.r?(i===z.r?C.hi:'color-mix(in srgb,var(--hi) 35%,var(--card))'):C.card,stroke:i=>z.bad&&i===z.r?C.red:C.line});s+=c.s;
+s+=T(c.cx(z.l),40,'l',{fs:15,w:700,fill:C.blue})+T(c.cx(z.r),40+(z.l===z.r?-16:0),'r',{fs:15,w:700,fill:C.red});
+const ks=Object.keys(z.last);s+=T(W/2,60+c.cw+48,'last seen: '+ks.map(k=>`${k}:${z.last[k]}`).join('  '),{fs:13,fill:C.mute});s+=T(W/2,H-36,`best = ${z.best}`,{fs:22,w:700,fill:C.grn});return s}};
+// 7 Stack NGE
+V[7]={title:'Next greater element (monotonic stack, right to left)',def:'4, 5, 2, 10, 8',hint:'Up to 10 numbers',
+code:['stack = []','for i from n-1 down to 0:','    while stack and stack.top <= arr[i]: pop','    ans[i] = stack.top if stack else -1','    push arr[i]'],
+steps(s){const a=parseNums(main(s)).slice(0,10);const st=[];const stk=[];const ans=a.map(()=>null);st.push({a,stk:[],ans:[...ans],i:a.length,line:0,msg:'Walk from the right. The stack keeps candidates in decreasing order.'});
+for(let i=a.length-1;i>=0;i--){st.push({a,stk:[...stk],ans:[...ans],i,line:1,msg:`Look at arr[${i}] = ${a[i]}.`});while(stk.length&&stk[stk.length-1]<=a[i]){const p=stk.pop();st.push({a,stk:[...stk],ans:[...ans],i,line:2,msg:`${p} ≤ ${a[i]}: it can never be anyone's answer to the left of here → pop.`})}ans[i]=stk.length?stk[stk.length-1]:-1;st.push({a,stk:[...stk],ans:[...ans],i,line:3,msg:`Next greater of ${a[i]} is ${ans[i]}.`});stk.push(a[i]);st.push({a,stk:[...stk],ans:[...ans],i,line:4,msg:`Push ${a[i]}.`})}
+st.push({a,stk,ans,i:-1,line:3,msg:'Done. Each element is pushed and popped at most once → O(n).'});return st},
+draw(W,H,z){let s='';const aw=W*0.72;const c=cells(aw,40,z.a,{fill:i=>i===z.i?C.hi:C.card});s+=c.s;s+=T(10,26,'arr',{a:'start',fs:12,fill:C.mute});
+const c2=cells(aw,40+c.cw+40,z.ans.map(v=>v==null?'':v),{fill:()=>C.paper,idx:false});s+=c2.s+T(10,40+c.cw+26,'ans',{a:'start',fs:12,fill:C.mute});
+const sx=aw+10,sw=W-aw-24,bh=30;s+=T(sx+sw/2,26,'stack',{fs:12,fill:C.mute});s+=`<path d="M${sx} 40 V${H-20} H${sx+sw} V40" fill="none" stroke="var(--ink)" stroke-width="2"/>`;
+z.stk.forEach((v,j)=>{const y=H-24-(j+1)*bh;s+=R(sx+4,y,sw-8,bh-4,j===z.stk.length-1?C.hi:C.card,C.ink)+T(sx+sw/2,y+(bh-4)/2,v,{fs:14,w:600})});return s}};
+// 8 Binary tree traversals
+V[8]={title:'Tree traversals',def:'1, 2, 3, 4, 5, 6, 7',hint:'Level order, use null for gaps',modes:['Preorder','Inorder','Postorder','Level order'],
+codeFor:{Preorder:['def pre(node):','    if not node: return','    visit(node)','    pre(node.left)','    pre(node.right)'],Inorder:['def ino(node):','    if not node: return','    ino(node.left)','    visit(node)','    ino(node.right)'],Postorder:['def post(node):','    if not node: return','    post(node.left)','    post(node.right)','    visit(node)'],'Level order':['q = [root]','while q:','    node = q.pop(0)','    visit(node)','    push node.left, node.right if they exist']},
+steps(s,mode){const vals=main(s).split(/[ ,]+/).filter(x=>x).slice(0,15);const nodes={};vals.forEach((v,i)=>{if(v!=='null'&&(i===0||nodes[Math.floor((i-1)/2)]))nodes[i]={v,l:2*i+1<vals.length?2*i+1:null,r:2*i+2<vals.length?2*i+2:null}});for(const k in nodes){if(!nodes[nodes[k].l])nodes[k].l=null;if(!nodes[nodes[k].r])nodes[k].r=null}
+const order=[];const st=[];const visitLine={Preorder:2,Inorder:3,Postorder:4,'Level order':3}[mode];
+const rec=id=>{if(id==null||!nodes[id])return;if(mode==='Preorder')vis(id);rec(nodes[id].l);if(mode==='Inorder')vis(id);rec(nodes[id].r);if(mode==='Postorder')vis(id)};
+const vis=id=>{order.push(id);st.push({nodes,order:[...order],cur:id,line:visitLine,msg:`Visit ${nodes[id].v}.`+(mode==='Inorder'?' (left subtree is finished)':mode==='Postorder'?' (both children are finished)':'')})};
+st.push({nodes,order:[],cur:null,line:0,msg:`${mode}: ${{Preorder:'root, left, right',Inorder:'left, root, right — gives sorted order in a BST',Postorder:'left, right, root — children before parent','Level order':'level by level using a queue'}[mode]}.`});
+if(mode==='Level order'){const q=nodes[0]?[0]:[];while(q.length){const id=q.shift();vis(id);if(nodes[id].l!=null)q.push(nodes[id].l);if(nodes[id].r!=null)q.push(nodes[id].r)}}else rec(0);
+st.push({nodes,order,cur:null,line:0,msg:`${mode}: ${order.map(i=>nodes[i].v).join(', ')}. Every node once → O(n).`});return st},
+draw(W,H,z){let s='';const pos=treeLayout(z.nodes,W,H-70,34);for(const id in z.nodes){const n=z.nodes[id];[n.l,n.r].forEach(c=>{if(c!=null&&pos[c])s+=L(pos[id].x,pos[id].y,pos[c].x,pos[c].y,C.line,2)})}
+for(const id in z.nodes){const k=z.order.indexOf(+id);const on=+id===z.cur;s+=CI(pos[id].x,pos[id].y,17,on?C.hi:(k>=0?'color-mix(in srgb,var(--grn) 25%,var(--card))':C.card),on?C.ink:C.mute)+T(pos[id].x,pos[id].y,z.nodes[id].v,{fs:14,w:600});if(k>=0)s+=T(pos[id].x+20,pos[id].y-18,k+1,{fs:11,w:700,fill:C.grn})}
+s+=T(12,H-28,'order: '+z.order.map(i=>z.nodes[i].v).join(' → '),{a:'start',fs:14,w:600});return s}};
+// 9 BST insert
+V[9]={title:'Insert into a BST (walk left or right)',def:'50, 30, 70, 20, 40, 60, 80 | insert=65',hint:'Values to build the tree, then | insert=value',
+code:['node = root','while True:','    if val < node.val: go left (attach here if empty)','    else: go right (attach here if empty)'],
+steps(s){const vals=parseNums(main(s)).slice(0,12);const x=+kv(s,'insert',65);const nodes={};let id=0;const ins=v=>{if(!nodes[0]){nodes[0]={v,l:null,r:null};return}let c=0;while(1){const side=v<nodes[c].v?'l':'r';if(nodes[c][side]==null){id++;nodes[id]={v,l:null,r:null};nodes[c][side]=id;return id}c=nodes[c][side]}};vals.forEach(ins);
+const clone=()=>JSON.parse(JSON.stringify(nodes));const st=[];st.push({nodes:clone(),path:[],x,line:0,msg:`Insert ${x}. Start at the root ${nodes[0].v}.`});let c=0;const path=[];
+while(1){path.push(c);const go=x<nodes[c].v?'l':'r';st.push({nodes:clone(),path:[...path],x,line:go==='l'?2:3,msg:`${x} ${go==='l'?'<':'≥'} ${nodes[c].v} → go ${go==='l'?'left':'right'}.`});if(nodes[c][go]==null){id++;nodes[id]={v:x,l:null,r:null};nodes[c][go]=id;path.push(id);st.push({nodes:clone(),path:[...path],x,line:go==='l'?2:3,msg:`Empty spot → attach ${x} here. Cost = height of tree: O(log n) if balanced, O(n) if skewed.`});break}c=nodes[c][go]}return st},
+draw(W,H,z){let s='';const pos=treeLayout(z.nodes,W,H-50,34);for(const id in z.nodes){const n=z.nodes[id];[n.l,n.r].forEach(c=>{if(c!=null&&pos[c]){const on=z.path.includes(+id)&&z.path.includes(c);s+=L(pos[id].x,pos[id].y,pos[c].x,pos[c].y,on?C.ink:C.line,on?3:2)}})}
+for(const id in z.nodes){const on=z.path[z.path.length-1]===+id;const inp=z.path.includes(+id);s+=CI(pos[id].x,pos[id].y,17,on?C.hi:(inp?'color-mix(in srgb,var(--hi) 35%,var(--card))':C.card),inp?C.ink:C.mute)+T(pos[id].x,pos[id].y,z.nodes[id].v,{fs:13,w:600})}
+s+=T(W/2,H-22,`inserting ${z.x}`,{fs:16,w:700});return s}};
+// 10 Heap
+V[10]={title:'Min-heap insert (add at the end, sift up)',def:'5, 3, 8, 1, 9, 2',hint:'Up to 10 numbers',
+code:['heap.append(x); i = last index','while i > 0 and heap[parent(i)] > heap[i]:','    swap(heap[i], heap[parent(i)])','    i = parent(i)        # parent(i) = (i-1)//2'],
+steps(s){const a=parseNums(main(s)).slice(0,10);const h=[];const st=[];a.forEach(x=>{h.push(x);let i=h.length-1;st.push({h:[...h],i,line:0,msg:`Insert ${x} at the end (index ${i}).`});while(i>0&&h[(i-1)>>1]>h[i]){const p=(i-1)>>1;st.push({h:[...h],i,p,line:1,msg:`Parent ${h[p]} > ${h[i]} → heap rule broken.`});[h[i],h[p]]=[h[p],h[i]];i=p;st.push({h:[...h],i,line:2,msg:'Swap up.'})}st.push({h:[...h],i,line:1,msg:`${x} is in place. Smallest is at the top: ${h[0]}.`})});st.push({h,line:0,msg:`Heap built. Each insert is O(log n); the array is the tree, no pointers.`});return st},
+draw(W,H,z){let s='';const n=z.h.length;const lv=Math.floor(Math.log2(Math.max(1,n)))+1;const dy=Math.min(60,(H-130)/Math.max(1,lv-1));const P=i=>{const d=Math.floor(Math.log2(i+1));const k=i-(2**d-1);return {x:(k+.5)*W/2**d,y:30+d*dy}};
+for(let i=1;i<n;i++){const a=P(i),b=P((i-1)>>1);s+=L(a.x,a.y,b.x,b.y,C.line,2)}for(let i=0;i<n;i++){const q=P(i);const on=i===z.i||i===z.p;s+=CI(q.x,q.y,16,on?C.hi:C.card,i===z.p?C.red:C.ink)+T(q.x,q.y,z.h[i],{fs:13,w:600})}
+const c=cells(W,H-70,z.h,{fill:i=>i===z.i||i===z.p?C.hi:C.card});s+=c.s;return s}};
+// 11 DP LCS
+V[11]={title:'Longest common subsequence (DP table)',def:'abcde | ace',hint:'two words: first | second (up to 7 letters)',
+code:['dp[i][0] = dp[0][j] = 0','for i in 1..n, j in 1..m:','    if a[i-1] == b[j-1]: dp[i][j] = 1 + dp[i-1][j-1]','    else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])','return dp[n][m]'],
+steps(s){const parts=s.split('|');const a=[...(parts[0]||'abcde').trim()].slice(0,7),b=[...(parts[1]||'ace').trim()].slice(0,7);const n=a.length,m=b.length;const dp=Array.from({length:n+1},()=>Array(m+1).fill(null));for(let i=0;i<=n;i++)dp[i][0]=0;for(let j=0;j<=m;j++)dp[0][j]=0;const st=[];const cp=()=>dp.map(r=>[...r]);
+st.push({a,b,dp:cp(),line:0,msg:'Row 0 and column 0 are 0: an empty string has nothing in common.'});
+for(let i=1;i<=n;i++)for(let j=1;j<=m;j++){if(a[i-1]===b[j-1]){dp[i][j]=1+dp[i-1][j-1];st.push({a,b,dp:cp(),ci:i,cj:j,src:[[i-1,j-1]],line:2,msg:`'${a[i-1]}' = '${b[j-1]}' → 1 + diagonal = ${dp[i][j]}.`})}else{dp[i][j]=Math.max(dp[i-1][j],dp[i][j-1]);st.push({a,b,dp:cp(),ci:i,cj:j,src:[[i-1,j],[i,j-1]],line:3,msg:`'${a[i-1]}' ≠ '${b[j-1]}' → best of up (${dp[i-1][j]}) and left (${dp[i][j-1]}) = ${dp[i][j]}.`})}}
+st.push({a,b,dp:cp(),ci:n,cj:m,line:4,msg:`LCS length = ${dp[n][m]}. Table is (n+1)×(m+1) → O(n·m) time and space.`});return st},
+draw(W,H,z){let s='';const rows=z.a.length+2,cols=z.b.length+2;const cs=Math.min(46,(W-20)/cols,(H-20)/rows);const x0=(W-cs*cols)/2,y0=(H-cs*rows)/2;
+z.b.forEach((ch,j)=>s+=T(x0+(j+2.5)*cs,y0+cs/2,ch,{fs:15,w:700,fill:C.blue}));z.a.forEach((ch,i)=>s+=T(x0+cs/2,y0+(i+2.5)*cs,ch,{fs:15,w:700,fill:C.red}));
+for(let i=0;i<=z.a.length;i++)for(let j=0;j<=z.b.length;j++){const on=i===z.ci&&j===z.cj;const src=(z.src||[]).some(([p,q])=>p===i&&q===j);s+=R(x0+(j+1)*cs+1,y0+(i+1)*cs+1,cs-2,cs-2,on?C.hi:(src?'color-mix(in srgb,var(--blue) 25%,var(--card))':C.card),on?C.ink:C.line,4);if(z.dp[i][j]!=null)s+=T(x0+(j+1.5)*cs,y0+(i+1.5)*cs,z.dp[i][j],{fs:14,w:on?700:400})}return s}};
+// 12 Trie
+V[12]={title:'Trie: insert words letter by letter',def:'app, apple, bat, bad',hint:'Comma-separated words',
+code:['node = root','for ch in word:','    if ch not in node.children: create it','    node = node.children[ch]','node.isEnd = True'],
+steps(s){const words=main(s).split(/[ ,]+/).filter(w=>w).slice(0,6).map(w=>w.toLowerCase().slice(0,7));const nodes=[{ch:'·',kids:{},end:false,p:-1}];words.forEach(w=>{let c=0;for(const ch of w){if(nodes[c].kids[ch]==null){nodes.push({ch,kids:{},end:false,p:c});nodes[c].kids[ch]=nodes.length-1}c=nodes[c].kids[ch]}nodes[c].end=true});
+const leaves={};let k=0;const lay=(i,d)=>{const ks=Object.values(nodes[i].kids);if(!ks.length){leaves[i]={x:k++,d};return leaves[i].x}const xs=ks.map(c=>lay(c,d+1));leaves[i]={x:(Math.min(...xs)+Math.max(...xs))/2,d};return leaves[i].x};lay(0,0);
+const st=[];const made=new Set([0]),ends=new Set();st.push({nodes,leaves,k,made:new Set(made),ends:new Set(ends),cur:0,line:0,msg:'Empty trie: just the root.'});
+words.forEach(w=>{let c=0;st.push({nodes,leaves,k,made:new Set(made),ends:new Set(ends),cur:0,line:0,msg:`Insert "${w}".`});for(const ch of w){const nx=nodes[c].kids[ch];const isNew=!made.has(nx);made.add(nx);c=nx;st.push({nodes,leaves,k,made:new Set(made),ends:new Set(ends),cur:c,line:isNew?2:3,msg:isNew?`'${ch}' missing → create a node.`:`'${ch}' already exists → reuse the shared prefix.`})}ends.add(c);st.push({nodes,leaves,k,made:new Set(made),ends:new Set(ends),cur:c,line:4,msg:`Mark end of "${w}". Insert/search cost = word length, O(L).`})});return st},
+draw(W,H,z){let s='';const maxd=Math.max(...Object.values(z.leaves).map(p=>p.d));const dy=Math.min(56,(H-50)/Math.max(1,maxd));const P=i=>({x:(z.leaves[i].x+.5)*W/z.k,y:26+z.leaves[i].d*dy});
+z.made.forEach(i=>{if(i>0){const a=P(i),b=P(z.nodes[i].p);s+=L(b.x,b.y,a.x,a.y,C.line,2)}});z.made.forEach(i=>{const q=P(i);const on=i===z.cur;s+=CI(q.x,q.y,15,on?C.hi:C.card,z.ends.has(i)?C.grn:C.mute)+(z.ends.has(i)?CI(q.x,q.y,19,'none',C.grn):'')+T(q.x,q.y,z.nodes[i].ch,{fs:14,w:600})});
+s+=T(12,H-16,'double ring = end of a word',{a:'start',fs:12,fill:C.mute});return s}};
+// 13 Reverse words
+V[13]={title:'Reverse words in a string (scan from the end)',def:'  the sky  is blue ',hint:'Any sentence',
+code:['i = n - 1; out = []','while i >= 0:','    skip spaces','    j = i; move i left to the start of the word','    out.append(s[i+1 .. j])','return " ".join(out)'],
+steps(s){const a=[...s.slice(0,28)];const st=[];let i=a.length-1;const out=[];st.push({a,i,out:[],line:0,msg:'Start at the last character. Extra spaces will be dropped.'});
+while(i>=0){while(i>=0&&a[i]===' ')i--;if(i<0)break;st.push({a,i,out:[...out],line:2,msg:'Skipped spaces; i is at the end of a word.'});const j=i;while(i>=0&&a[i]!==' ')i--;out.push(a.slice(i+1,j+1).join(''));st.push({a,i,j,out:[...out],line:4,msg:`Word "${out[out.length-1]}" → add to output.`})}
+st.push({a,i:-1,out,line:5,msg:`"${out.join(' ')}". One pass → O(n).`});return st},
+draw(W,H,z){let s='';const c=cells(W,60,z.a.map(ch=>ch===' '?'␣':ch),{fill:i=>z.j!=null&&i>z.i&&i<=z.j?C.hi:C.card,idx:false});s+=c.s;if(z.i>=0)s+=T(c.cx(z.i),40,'i',{fs:15,w:700,fill:C.blue});s+=T(W/2,H-44,`"${z.out.join(' ')}"`,{fs:18,w:700,fill:C.grn});return s}};
+// 14 Sieve
+V[14]={title:'Sieve of Eratosthenes',def:'n=60',hint:'n = up to 100',
+code:['prime[2..n] = True','for p from 2 while p*p <= n:','    if prime[p]:','        for m from p*p to n step p: prime[m] = False','primes = all p still True'],
+steps(s){const n=Math.min(100,Math.max(10,+kv(s,'n',60)));const cross={};const st=[];st.push({n,cross:{},p:0,line:0,msg:`Assume every number from 2 to ${n} is prime.`});
+for(let p=2;p*p<=n;p++){if(cross[p]){st.push({n,cross:{...cross},p,line:2,msg:`${p} is already crossed out → skip.`});continue}const now=[];for(let m=p*p;m<=n;m+=p){if(!cross[m]){cross[m]=p;now.push(m)}}st.push({n,cross:{...cross},p,now,line:3,msg:`${p} is prime. Cross out its multiples from ${p*p}: ${now.slice(0,8).join(', ')}${now.length>8?'…':''}.`})}
+const pr=[];for(let i=2;i<=n;i++)if(!cross[i])pr.push(i);st.push({n,cross,p:0,line:4,msg:`${pr.length} primes up to ${n}. Time O(n log log n).`});return st},
+draw(W,H,z){let s='';const cols=10,rows=Math.ceil((z.n-1)/cols);const cs=Math.min(48,(W-16)/cols,(H-16)/rows);const x0=(W-cs*cols)/2,y0=(H-cs*rows)/2;
+for(let v=2;v<=z.n;v++){const k=v-2,x=x0+(k%cols)*cs,y=y0+Math.floor(k/cols)*cs;const cr=z.cross[v];const nw=(z.now||[]).includes(v);s+=R(x+2,y+2,cs-4,cs-4,v===z.p?C.hi:(nw?'color-mix(in srgb,var(--red) 25%,var(--card))':(cr?C.paper:C.card)),v===z.p?C.ink:C.line,5)+T(x+cs/2,y+cs/2,v,{fs:Math.min(14,cs*.36),w:cr?400:700,fill:cr?C.mute:C.ink});if(cr)s+=L(x+8,y+cs-8,x+cs-8,y+8,nw?C.red:C.mute,1.5)}return s}};
+
+const QZ=[
+[['Count subarrays with sum K: why start the map with {0: 1}?',['So subarrays starting at index 0 are counted','To avoid division by zero','Because k is never 0'],0,'A prefix equal to k means the whole prefix is a valid subarray; prefix 0 "seen once" counts it.'],['Why can\'t a sliding window solve this when the array has negatives?',['Windows are too slow','Shrinking no longer always lowers the sum','Hash maps can\'t store negatives'],1,'With negatives, moving l right can raise the sum, so the window logic breaks.']],
+[['Lower bound returns…',['the last index with arr[i] ≤ x','the first index with arr[i] ≥ x','any index with arr[i] = x'],1,'Keep saving mid when arr[mid] ≥ x and keep looking left.'],['Koko eating bananas is "binary search on answers" because…',['the piles are sorted','if speed s works, every speed > s works too','the answer is an index'],1,'A monotonic yes/no over the answer space lets you halve it.']],
+[['How many centres does expand-around-centre try for a string of length n?',['n','2n − 1','n²'],1,'n letters plus n−1 gaps between letters.']],
+[['How many subsets does pick/not-pick generate for n items?',['n²','2ⁿ','n!'],1,'Two choices per item.'],['In Combination Sum II, what avoids duplicate combinations?',['Sorting and skipping equal values at the same level','Using a set of results only','Picking each index twice'],0,'Sort, then at one recursion level skip a value equal to the previous one.']],
+[['Reversing a list: why save nxt before changing curr.next?',['For speed','Otherwise the rest of the list is lost','It is needed for null'],1,'After curr.next = prev, the old next pointer is gone.'],['Floyd\'s cycle detection uses…',['two pointers moving 1 and 2 steps','a hash set only','recursion'],0,'If there is a loop, fast catches slow.']],
+[['Merge intervals: why sort by start first?',['To use binary search','So an overlap can only be with the last merged interval','Sorting is optional'],1,'Sorted starts mean you only ever compare with the last block.']],
+[['When does the window shrink in "longest substring without repeats"?',['Every step','When s[r] already appears inside the window','When the window exceeds 26'],1,'Jump l past the earlier copy of s[r].']],
+[['In next-greater-element, why pop values ≤ arr[i]?',['They are duplicates','arr[i] blocks them for everything to its left','To save memory only'],1,'Anything to the left sees arr[i] first, and it is at least as large.'],['Total time of the monotonic stack approach:',['O(n²)','O(n log n)','O(n)'],2,'Each element is pushed and popped at most once.']],
+[['Which traversal gives sorted order in a BST?',['Preorder','Inorder','Level order'],1,'Left, root, right visits values in ascending order.'],['Level order traversal uses a…',['stack','queue','heap'],1,'First in, first out gives level by level.']],
+[['Search/insert cost in a BST is proportional to…',['number of nodes always','height of the tree','number of leaves'],1,'O(log n) when balanced, O(n) when skewed.']],
+[['In an array min-heap, the parent of index i is…',['i/2','(i − 1) // 2','2i + 1'],1,'Children of i are 2i+1 and 2i+2.'],['To find the k-th largest of n numbers efficiently, keep…',['a max-heap of all n','a min-heap of size k','a sorted array'],1,'The top of a size-k min-heap is the k-th largest: O(n log k).']],
+[['LCS: when the letters match, dp[i][j] = …',['max(up, left)','1 + diagonal','up + left'],1,'Both letters are used, so extend the answer for the shorter prefixes.'],['Memoization vs tabulation:',['top-down recursion + cache vs bottom-up loops','they are unrelated','tabulation is always slower'],0,'Same states; tabulation fills them in order and can save stack space.']],
+[['Trie search time for a word of length L:',['O(L)','O(log n)','O(n·L)'],0,'One step per character, independent of how many words are stored.']],
+[['Reverse words in place (O(1) extra space) can be done by…',['reverse the whole string, then reverse each word','sorting the words','using a stack of characters'],0,'Two reversals put the words in reverse order with letters the right way round.']],
+[['Why can the sieve start crossing out at p·p?',['Smaller multiples were already crossed by smaller primes','p·p is always even','It is a convention only'],0,'Any k·p with k < p has a smaller prime factor that already crossed it.']]];
+
+/* ---------- visualizer controller ---------- */
+let steps=[],si=0,timer=null,mode='Preorder',spd=1,score={},pred=false,rev=false,lastKey='';
+const svg=$('svg');
+function draw(){const W=svg.clientWidth||360,H=svg.clientHeight||320,z=steps[si];if(!z){svg.innerHTML='';return}svg.setAttribute('viewBox',`0 0 ${W} ${H}`);try{svg.innerHTML=DEFS+V[curT].draw(W,H,z)}catch(e){svg.innerHTML=T(W/2,H/2,'Could not draw this input')}
+  const key=curT+':'+mode+':'+si+':'+steps.length;if(key!==lastKey){lastKey=key;rev=false}const ask=pred&&!rev&&si>0;$('msg').textContent=ask?'What happens on this step? Decide, then tap here to check.':z.msg;$('msg').classList.toggle('ask',ask);$('stepn').textContent=`Step ${si+1} of ${steps.length}`;$('scr').max=steps.length-1;$('scr').value=si;[...$('code').children].forEach((el,i)=>el.classList.toggle('on',!ask&&i===z.line));$('bp').disabled=si===0;$('bn').disabled=si>=steps.length-1}
+function build(){stop();const v=V[curT];try{steps=v.steps($('inp').value,mode)}catch(e){steps=[]}if(!steps.length){$('inp').value=v.def;steps=v.steps(v.def,mode)}si=0;draw()}
+function setCode(){const v=V[curT];$('code').innerHTML=(v.codeFor?v.codeFor[mode]:v.code).map(l=>`<span>${esc(l)}</span>`).join('')}
+function renderModes(){const v=V[curT];$('modes').hidden=!v.modes;if(v.modes)$('modes').innerHTML=v.modes.map(m=>`<button class="chip${m===mode?' on':''}" data-mode="${m}">${m}</button>`).join('')}
+function renderQuiz(){score[curT]=score[curT]||{};const qs=QZ[curT];$('quiz').innerHTML=qs.map((q,k)=>`<div class="qz"><p>${esc(q[0])}</p>${q[1].map((o,j)=>`<button data-q="${k}" data-o="${j}">${esc(o)}</button>`).join('')}<div class="why" hidden>${esc(q[3])}</div></div>`).join('');quizHead()}
+function quizHead(){const sc=score[curT]||{},a=Object.keys(sc).length;$('qzh').textContent='Quick check'+(a?` · ${Object.values(sc).filter(Boolean).length} of ${QZ[curT].length} right first try`:'')}
+function openTopic(i,go){curT=i;const v=V[i];$('vtitle').textContent=v.title;$('inp').value=v.def;$('hint').textContent='Try your own input: '+v.hint;renderModes();setCode();build();renderQuiz();renderLearnLists();if(go)show('learn',true)}
+function stop(){clearInterval(timer);timer=null;$('bplay').textContent='▶ Play'}
+function play(){if(timer){stop();return}if(si>=steps.length-1)si=0;$('bplay').textContent='❚❚ Pause';timer=setInterval(()=>{if(si<steps.length-1){si++;draw()}else stop()},1100/spd)}
+$('run').addEventListener('click',build);
+$('inp').addEventListener('keydown',e=>{if(e.key==='Enter')build()});
+$('scr').addEventListener('input',e=>{stop();si=+e.target.value;draw()});
+$('bn').addEventListener('click',()=>{stop();if(si<steps.length-1){si++;draw()}});
+$('bp').addEventListener('click',()=>{stop();if(si>0){si--;draw()}});
+$('b0').addEventListener('click',()=>{stop();si=0;draw()});
+$('bplay').addEventListener('click',play);
+$('bpred').addEventListener('click',()=>{pred=!pred;rev=false;stop();$('bpred').textContent='Predict mode: '+(pred?'on':'off');$('bpred').setAttribute('aria-pressed',pred);draw()});
+$('msg').addEventListener('click',()=>{if(pred&&!rev){rev=true;draw()}});
+$('bspd').addEventListener('click',()=>{spd=spd===1?2:spd===2?.5:1;$('bspd').textContent=spd+'×';if(timer){stop();play()}});
+let tx=null;$('fig').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});$('fig').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>40){stop();si=Math.max(0,Math.min(steps.length-1,si+(dx<0?1:-1)));draw()}});
+document.addEventListener('click',e=>{const b=e.target.closest('button,[data-open]');if(!b)return;const D=b.dataset;
+  if(D.nav){show(D.nav,true);return}
+  if(D.act==='opts'){optsOpen=!optsOpen;renderOpts();if(optsOpen)try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}return}
+  if(D.themeSet){theme=D.themeSet;try{localStorage.setItem('a2z-theme',theme)}catch(e){}applyTheme();renderOpts();draw();return}
+  if(D.pause){pauseDays(+D.pause);return}
+  if(D.act==='resume'){resume();return}
+  if(D.act==='clearoff'){S.off={};afterSched();return}
+  if(D.len){optLen=Math.min(60,Math.max(10,(optLen||N)+(+D.len)));if(optLen===N)optLen=0;renderOpts();return}
+  if(D.act==='applylen'){if(optLen)setLength(optLen);return}
+  if(D.act==='cancellen'){optLen=0;renderOpts();return}
+  if(D.act==='gon'){const x=$('gtokin'),v=x?x.value.trim():'';if(!v){gmsg='Paste the token first.';renderOpts();return}gtok=v;try{localStorage.setItem('a2z-gtok',v)}catch(e){}gmsg='Connecting…';renderOpts();gInit();return}
+  if(D.act==='goff'){gDisconnect();renderOpts();return}
+  if(D.act==='gsync'){gCheck().then(()=>renderOpts());return}
+  if(D.act==='bkopen'){bkOpen=!bkOpen;bkMsg='';renderOpts();return}
+  if(D.act==='bkcopy'){const txt=JSON.stringify(S),fb=()=>{bkOpen=true;bkMsg='Copying was blocked. Select all the text in the box and copy it.';renderOpts();const x=$('bktxt');if(x){x.value=txt;try{x.focus();x.select()}catch(e){}}};try{navigator.clipboard.writeText(txt).then(()=>{bkMsg='Backup code copied. Paste it into a note, or into Restore on your other device.';renderOpts()},fb)}catch(e){fb()}return}
+  if(D.act==='bkfile'){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='a2z-backup-'+iso(today0())+'.json';document.body.appendChild(a);a.click();a.remove();bkMsg='If no file was saved, use Copy backup code instead.'}catch(e){bkMsg='Downloads are blocked here. Use Copy backup code instead.'}renderOpts();return}
+  if(D.act==='bkrestore'){const x=$('bktxt'),raw=x?x.value.trim():'';let o=null;try{o=JSON.parse(raw)}catch(e){}if(!o||typeof o!=='object'||Array.isArray(o)||!o.q||typeof o.q!=='object'){bkMsg='That is not a valid backup code. Nothing was changed.';renderOpts();return}S=norm(o);bkOpen=false;bkMsg=`Restored: ${Object.keys(S.q).length} marked questions.`;afterSched();return}
+  if(D.act==='carry'){carry(viewDay);return}
+  if(D.act==='catchup'){catchUp(viewDay);return}
+  if(D.act==='rebal'){rebalance(viewDay+1);return}
+  if(D.act==='unmove'){S.mv={};const k=viewDay;afterSched();viewDay=selDay=k;renderAll();return}
+  if(D.act==='mock'){const pool=Q.filter(isDone),src=pool.length>=3?pool:Q.filter(q=>q[4]<=Math.max(1,Math.min(N,dayNum())));mockIds=[...src].sort(()=>Math.random()-.5).slice(0,3).map(q=>q[0]);renderReview();return}
+  if(D.s){setStatus(+D.id,D.s);return}
+  if(D.timer){toggleTimer(+D.timer);return}
+  if(D.chk){const m=S[D.chk];if(m[D.d])delete m[D.d];else{m[D.d]=1;mark()}save();renderAll();return}
+  if(D.rev){const v=S.q[+D.rev];if(v){v.r++;v.d=iso(today0());mark();save();renderAll()}return}
+  if(D.stuck){const v=S.q[+D.stuck];if(v){v.r=0;v.s='r';v.d=iso(today0());save();renderAll()}return}
+  if(D.open!=null){openTopic(+D.open,true);return}
+  if(D.mode){mode=D.mode;renderModes();setCode();build();return}
+  if(D.focus){focusId=+D.focus;renderToday();timerUI();try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}return}
+  if(D.pm){planMode=D.pm;renderPlan();return}
+  if(D.day){selDay=+D.day;renderPlan();return}
+  if(D.go){focusId=null;viewDay=selDay=+D.go;renderToday();renderPlan();show('today',true);return}
+  if(b.id==='dprev'&&viewDay>1){focusId=null;viewDay--;selDay=viewDay;renderToday();renderPlan();timerUI();return}
+  if(b.id==='dnext'&&viewDay<N){focusId=null;viewDay++;selDay=viewDay;renderToday();renderPlan();timerUI();return}
+  if(D.q!=null){const k=+D.q,q=QZ[curT][k],box=b.parentElement,sc=score[curT];if(!(k in sc))sc[k]=+D.o===q[2];box.querySelectorAll('button').forEach((x,j)=>{x.classList.remove('ok','no');if(j===q[2])x.classList.add('ok')});if(+D.o!==q[2])b.classList.add('no');box.querySelector('.why').hidden=false;quizHead()}
+});
+document.addEventListener('change',e=>{const el=e.target;if(el&&el.id==='bkfilein'&&el.files&&el.files[0]){el.files[0].text().then(tx=>{const x=$('bktxt');if(x)x.value=tx}).catch(()=>{});return}if(el&&el.dataset&&el.dataset.note){const id=el.dataset.note,v=el.value.trim().slice(0,600);if(v)S.n[id]=v;else delete S.n[id];save()}});
+const ro=new ResizeObserver(()=>{if(view==='learn')draw()});ro.observe($('fig'));
+const ro2=new ResizeObserver(()=>drawJourney());ro2.observe($('v-plan'));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gtok&&ref&&!inClaude())gCheck()});
+window.addEventListener('hashchange',()=>show((location.hash||'').slice(1),false));
+const firstT=(()=>{const qs=dayQs(viewDay);return qs.length?qs[0][1]:0})();
+renderAll();openTopic(firstT,false);show((location.hash||'').slice(1)||'today',false);initSync();
+}
+</script>
+</body>
+</html>
